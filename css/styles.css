@@ -53,10 +53,22 @@ body.detail-page {
   transform: rotate(-90deg); /* Rotate text vertically */
   transform-origin: left bottom; /* Correct alignment for rotation */
   font-size: 14px; /* Adjust font size */
-  letter-spacing: 1px; /* Space out letters slightly */
   white-space: nowrap; /* Prevent text wrapping */
   color: #fff; /* White text for the black background */
   z-index: 1000; /* Ensure text is above all elements */
+}
+
+/* Vertical Text for Both Pages */
+.vertical-text {
+  position: fixed;
+  bottom: 15px;
+  left: 23px;
+  transform: rotate(-90deg);
+  transform-origin: left bottom;
+  font-size: 14px;
+  color: #333; /* Text color for index page */
+  white-space: nowrap;
+  z-index: 1000;
 }
 
 .detail-page .book-detail {
@@ -98,18 +110,7 @@ body.detail-page {
   color: #ddd;
 }
 
-/* Vertical Text for Both Pages */
-.vertical-text {
-  position: fixed;
-  bottom: 15px;
-  left: 23px;
-  transform: rotate(-90deg);
-  transform-origin: left bottom;
-  font-size: 14px;
-  color: #333; /* Text color for index page */
-  white-space: nowrap;
-  z-index: 1000;
-}
+
 
 #readDate {
   font-size: 18px;
