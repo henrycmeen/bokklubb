@@ -146,23 +146,18 @@ body.detail-page {
   z-index: 2000;
   overflow: hidden;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.9));
-  opacity: 0;
+  background: transparent; /* Start fully transparent */
+  opacity: 0; /* Invisible initially */
+  transition: background 2s ease-in-out, opacity 1s ease-in-out; /* Smooth transition for background and visibility */
 }
 
 .overlay.active {
-  opacity: 1;
-  animation: overlayFade 15s ease-in-out forwards; /* Phase 1: Flowing energy for 15s */
+  opacity: 1; /* Make the overlay visible */
+  background: radial-gradient(circle, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.9)); /* Gradual black overlay */
 }
 
-/* Fade-in and Fade-out for Overlay */
-@keyframes overlayFade {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.overlay.white {
+  background: white; /* Transition to white at the end */
 }
 
 /* Divine Flow Layers (Phase 1) */
@@ -193,7 +188,7 @@ body.detail-page {
   filter: blur(80px);
 }
 
-/* Keyframes for Divine Flow */
+/* Divine Flow Keyframes */
 @keyframes divineFlow {
   0% {
     transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
@@ -239,7 +234,7 @@ body.detail-page {
   }
 }
 
-/* Phase 2: Firework Worms */
+/* Organic Worms (Phase 2) */
 .worm {
   position: absolute;
   width: 20px;
@@ -247,29 +242,27 @@ body.detail-page {
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 0, 0, 1), rgba(255, 165, 0, 0.8));
   filter: blur(5px);
-  animation: swimWorm 15s infinite ease-in-out;
+  animation: swimSnake 20s ease-in-out infinite, explode 2s ease-out 18s forwards; /* Explosion starts at 18s */
 }
 
-/* Worm Animation Keyframes */
-@keyframes swimWorm {
+/* Worm Oscillating Motion */
+@keyframes swimSnake {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* Worm Explosion */
+@keyframes explode {
   0% {
     transform: translate(0, 0) scale(1);
     opacity: 1;
   }
-  25% {
-    transform: translate(100px, -150px) scale(1.2);
-    opacity: 0.8;
-  }
-  50% {
-    transform: translate(-200px, 200px) scale(0.8);
-    opacity: 0.6;
-  }
-  75% {
-    transform: translate(150px, -100px) scale(1.5);
-    opacity: 1;
-  }
   100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.5;
+    transform: scale(50); /* Expands dramatically */
+    opacity: 0; /* Fades out */
   }
 }

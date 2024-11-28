@@ -19,44 +19,54 @@
     function animatePage(event) {
       const overlay = document.getElementById('overlay');
   
-      // Clear previous layers if any
-      overlay.innerHTML = '';
+      // Ensure the overlay starts clean
+      overlay.classList.remove('white'); // Remove any residual white background
+      overlay.innerHTML = ''; // Clear any previous content
   
-      // Phase 1: Add flowing energy layers
+      // Phase 1: Flowing energy animation
       for (let i = 0; i < 3; i++) {
         const flow = document.createElement('div');
         flow.classList.add('flow');
         overlay.appendChild(flow);
       }
   
-      // Activate overlay for Phase 1
+      // Activate the overlay for Phase 1
       overlay.classList.add('active');
   
-      // Transition to Phase 2 after 15 seconds
+      // Transition to Phase 2 (worms) after Phase 1
       setTimeout(() => {
         overlay.innerHTML = ''; // Clear flows
-        overlay.style.background = 'black'; // Black background
+        overlay.style.background = 'black'; // Ensure black background
   
-        // Phase 2: Add firework worms
-        for (let i = 0; i < 20; i++) {
+        // Phase 2: Add organic worms
+        for (let i = 0; i < 30; i++) {
           const worm = document.createElement('div');
           worm.classList.add('worm');
   
-          // Randomize start position
+          // Randomize worm start positions
           worm.style.top = `${Math.random() * 100}vh`;
           worm.style.left = `${Math.random() * 100}vw`;
   
-          // Append to overlay
+          // Append worm to overlay
           overlay.appendChild(worm);
         }
-      }, 15000);
+      }, 15000); // Transition to worms after 15 seconds
   
-      // Clean up and redirect after Phase 2
+      // Explosion Finale: Turn the screen white
       setTimeout(() => {
-        overlay.innerHTML = ''; // Clear overlay
+        overlay.classList.add('white');
+      }, 35000); // Trigger explosion at 35 seconds
+  
+      // Clean up and redirect after the animation
+      setTimeout(() => {
+        overlay.innerHTML = ''; // Clear everything
         window.location.href = 'index.html'; // Redirect
-      }, 30000); // Total 30 seconds (15s + 15s)
+      }, 37000); // Total duration 37 seconds
     }
+  
+    // Add event listeners for both click and touch
+    document.querySelector('.vertical-text').addEventListener('click', animatePage);
+    document.querySelector('.vertical-text').addEventListener('touchstart', animatePage);
   </script>
 </body>
 </html>
