@@ -9,8 +9,54 @@
 <body class="index-page">
   <main>
     <div class="grid" id="bookGrid"></div>
-    <div class="vertical-text">MUSERNE´S BOKKLUBB - 2024</div>
+    <!-- Clickable Text -->
+    <div class="vertical-text" onclick="animatePage(event)">MUSERNES BOKKLUBB - 2024</div>
+    <!-- Overlay for the Animation -->
+    <div class="overlay" id="overlay"></div>
   </main>
   <script src="js/app.js"></script>
+  <script>
+    function animatePage(event) {
+      const overlay = document.getElementById('overlay');
+  
+      // Clear previous layers if any
+      overlay.innerHTML = '';
+  
+      // Phase 1: Add flowing energy layers
+      for (let i = 0; i < 3; i++) {
+        const flow = document.createElement('div');
+        flow.classList.add('flow');
+        overlay.appendChild(flow);
+      }
+  
+      // Activate overlay for Phase 1
+      overlay.classList.add('active');
+  
+      // Transition to Phase 2 after 15 seconds
+      setTimeout(() => {
+        overlay.innerHTML = ''; // Clear flows
+        overlay.style.background = 'black'; // Black background
+  
+        // Phase 2: Add firework worms
+        for (let i = 0; i < 20; i++) {
+          const worm = document.createElement('div');
+          worm.classList.add('worm');
+  
+          // Randomize start position
+          worm.style.top = `${Math.random() * 100}vh`;
+          worm.style.left = `${Math.random() * 100}vw`;
+  
+          // Append to overlay
+          overlay.appendChild(worm);
+        }
+      }, 15000);
+  
+      // Clean up and redirect after Phase 2
+      setTimeout(() => {
+        overlay.innerHTML = ''; // Clear overlay
+        window.location.href = 'index.html'; // Redirect
+      }, 30000); // Total 30 seconds (15s + 15s)
+    }
+  </script>
 </body>
 </html>

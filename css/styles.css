@@ -136,3 +136,140 @@ body.detail-page {
   pointer-events: none; /* Ensure the vertical text doesn't block clicks */
 }
 
+/* Overlay Base */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.9));
+  opacity: 0;
+}
+
+.overlay.active {
+  opacity: 1;
+  animation: overlayFade 15s ease-in-out forwards; /* Phase 1: Flowing energy for 15s */
+}
+
+/* Fade-in and Fade-out for Overlay */
+@keyframes overlayFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Divine Flow Layers (Phase 1) */
+.flow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(255, 69, 0, 0.8), rgba(0, 128, 255, 0.3));
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0;
+  animation: divineFlow 15s infinite ease-in-out alternate;
+}
+
+/* Second Flow Layer */
+.flow:nth-child(2) {
+  background: conic-gradient(from 0deg, rgba(255, 255, 0, 0.6), rgba(0, 255, 128, 0.4));
+  animation: divineFlow2 15s infinite ease-in-out alternate-reverse;
+  filter: blur(60px);
+}
+
+/* Third Flow Layer */
+.flow:nth-child(3) {
+  background: radial-gradient(circle, rgba(128, 0, 128, 0.7), rgba(50, 205, 50, 0.4));
+  animation: divineFlow3 15s infinite ease-in-out alternate-reverse;
+  filter: blur(80px);
+}
+
+/* Keyframes for Divine Flow */
+@keyframes divineFlow {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate(-40%, -60%) scale(1.5) rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(360deg);
+    opacity: 0.2;
+  }
+}
+
+@keyframes divineFlow2 {
+  0% {
+    transform: translate(-50%, -50%) scale(1.2) rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-55%, -55%) scale(2.0) rotate(240deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.1) rotate(540deg);
+    opacity: 0.2;
+  }
+}
+
+@keyframes divineFlow3 {
+  0% {
+    transform: translate(-50%, -50%) scale(1.4) rotate(0deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-40%, -50%) scale(2.0) rotate(-240deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.2) rotate(-540deg);
+    opacity: 0.2;
+  }
+}
+
+/* Phase 2: Firework Worms */
+.worm {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 0, 0, 1), rgba(255, 165, 0, 0.8));
+  filter: blur(5px);
+  animation: swimWorm 15s infinite ease-in-out;
+}
+
+/* Worm Animation Keyframes */
+@keyframes swimWorm {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(100px, -150px) scale(1.2);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-200px, 200px) scale(0.8);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translate(150px, -100px) scale(1.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+}
