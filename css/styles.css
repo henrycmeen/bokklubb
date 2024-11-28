@@ -1,0 +1,137 @@
+/* General Reset */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* --- Index Page Styles --- */
+body.index-page {
+  background-color: #fff; /* White background */
+  color: #000; /* Black text */
+}
+
+.index-page .grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Always 3 columns */
+  grid-template-rows: repeat(3, 1fr); /* Always 3 rows */
+  gap: 10px;
+  padding: 20px;
+  width: 100%;
+  height: calc(100vh - 40px); /* Make the grid height full screen minus padding */
+  max-width: 1000px; /* Optional: Limit the width */
+  margin: 20px auto; /* Center the grid on the page */
+}
+
+.index-page .grid img {
+  width: 100%; /* Fill the grid cell */
+  height: 100%; /* Stretch to fill vertically */
+  aspect-ratio: 1 / 1; /* Forces each image to be square */
+  object-fit: cover; /* Scale the image properly */
+  margin: 0;
+  outline: none;
+  display: block;
+  border-radius: 0; /* Sharp corners */
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.index-page .grid img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Book Detail Page Styles --- */
+body.detail-page {
+  background-color: #000; /* Black background */
+  color: #fff; /* White text */
+}
+
+.detail-page .fixed-title {
+  position: fixed;
+  bottom: 15px; /* Align to the bottom */
+  left: 23px; /* Align to the left */
+  transform: rotate(-90deg); /* Rotate text vertically */
+  transform-origin: left bottom; /* Correct alignment for rotation */
+  font-size: 14px; /* Adjust font size */
+  letter-spacing: 1px; /* Space out letters slightly */
+  white-space: nowrap; /* Prevent text wrapping */
+  color: #fff; /* White text for the black background */
+  z-index: 1000; /* Ensure text is above all elements */
+}
+
+.detail-page .book-detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 40px;
+  height: 100%;
+}
+
+.detail-page .content {
+  max-width: 600px;
+}
+
+.detail-page h1 {
+  margin: 0 0 10px 0;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.detail-page h2 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: normal;
+  color: #bbb;
+}
+
+.detail-page p {
+  margin: 10px 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.detail-page .quotes p {
+  margin-top: 20px;
+  font-size: 14px;
+  font-style: italic;
+  color: #ddd;
+}
+
+/* Vertical Text for Both Pages */
+.vertical-text {
+  position: fixed;
+  bottom: 15px;
+  left: 23px;
+  transform: rotate(-90deg);
+  transform-origin: left bottom;
+  font-size: 14px;
+  color: #333; /* Text color for index page */
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+#readDate {
+  font-size: 18px;
+  font-style: bold;
+  color: #eda13f; /* Light gray for better contrast */
+  margin-top: 10px;
+}
+
+.clickable-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+}
+
+.clickable-area .content {
+  pointer-events: none; /* Ensure internal elements (like text) don't block clicks */
+}
+
+.fixed-title {
+  pointer-events: none; /* Ensure the vertical text doesn't block clicks */
+}
+
