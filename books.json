@@ -11,6 +11,19 @@
       "henry": "",
       "andre": ""
     }
+  },
+  {
+    "id": 2,
+    "title": "The Day The Sun Died",
+    "author": "Yan Lianke",
+    "cover": "assets/sundied.jpg",
+    "description": "The Day the Sun Died by Yan Lianke is a darkly satirical novel about a small village descending into chaos as its residents, caught in a nightmarish state of “dreamwalking,” blur the lines between reality and dream, exposing the fragility of societal order.",
+    "readDate": "30 November - ? / ?",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
   }
 ]
 
