@@ -67,6 +67,7 @@
           x: +book.realeaseDate,
           y: +book.realism_value,
           r: normalize(book.lenght, 50, 1000, 5, 40),
+          name: book.title, // Include book name
           borderColor: 'white', // Black border
           borderWidth: 0.3, // Set border width
           genre: book.genre,
@@ -76,16 +77,28 @@
         const minReleaseYear = Math.min(...chartData.map(d => d.x)) - 1;
         const maxReleaseYear = Math.max(...chartData.map(d => d.x)) + 1;
   
+        const genreGroups = {};
+
+        chartData.forEach((point) => {
+        const genre = point.genre || "Unknown"; // Fallback to "Unknown" for missing genres
+        if (!genreGroups[genre]) {
+            genreGroups[genre] = [];
+        }
+        genreGroups[genre].push(point); // Add the data point to the corresponding genre group
+        });
+
+        // Create datasets for each genre
+        const datasets = Object.keys(genreGroups).map((genre) => ({
+        label: genre, // Set the genre as the dataset label
+        data: genreGroups[genre], // Data points for this genre
+        backgroundColor: genreColorMap[genre] || defaultColor, // Set genre-specific color
+        borderColor: "white", // Set bubble border color
+        borderWidth: 0.3, // Set bubble border width
+        }));
+
+        // Update the data configuration
         const data = {
-          datasets: [
-            {
-              label: 'Book Statistics',
-              data: chartData, // Pass full data points including genre
-              backgroundColor: chartData.map(point => point.backgroundColor),
-              borderColor: chartData.map(point => point.borderColor), // Apply border color
-              borderWidth: chartData.map(point => point.borderWidth)  // Apply border width
-            }
-          ]
+        datasets: datasets, // Use the dynamically generated datasets
         };
   
         const config = {
@@ -95,27 +108,31 @@
             responsive: true,
             maintainAspectRatio: false, // Disable aspect ratio to control dimensions manually
             plugins: {
-              legend: {
-                position: 'top',
-                display: false,
-                labels: {
-                  color: 'white'
-                }
-              },
-              title: {
-                display: true,
-                text: 'What do we read?',
-                color: 'white',
-                font: {
-                  size: 16,
-                  weight: 'bold'
+                legend: {
+                    position: 'top',
+                    labels: {
+                    color: 'white', // Set legend text color
+                    font: {
+                        size: 14, // Adjust font size
+                        weight: 'bold' // Make text bold
+                    }
+                    }
+                },              
+                title: {
+                    display: true,
+                    text: 'What do we read?',
+                    color: 'white',
+                    font: {
+                    size: 16,
+                    weight: 'bold'
                 }
               },
               tooltip: {
                 callbacks: {
-                  label: function(context) {
-                    const dataPoint = context.raw; // Access the full data point
-                    return `Genre: ${dataPoint.genre || 'Unknown'}`; // Show genre or "Unknown"
+                    label: function (context) {
+                    const dataPoint = context.raw; // Access the raw data point
+                    const bookName = dataPoint.name || "Unknown"; // Get the book name or fallback
+                    return `${bookName}`; // Display the book name
                   }
                 }
               }
