@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Club Statistics</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Center the chart container and make it square */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: black;
+    }
+
+    .chart-container {
+      width: 80vmin; /* Set the width to be square based on the viewport */
+      height: 80vmin; /* Match the height to the width for a square */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="index-button" style="position: absolute; top: 10px; left: 10px; font-size: 24px; color: white; text-decoration: none;">-</a>
+  <div class="vertical-text" onclick="animatePage(event)">MUSERNES BOKKLUBB - 2024</div>
+  <div class="chart-container">
+    <canvas id="bubbleChart"></canvas>
+  </div>
+  <script>
+    // Define a color palette for different genres
+    const genreColorMap = {
+      Fiction: 'rgba(255, 99, 132, 0.6)', // Light red
+      Satire: 'rgba(54, 162, 235, 0.6)', // Light blue
+      Mystery: 'rgba(255, 206, 86, 0.6)', // Light yellow
+      Science: 'rgba(75, 192, 192, 0.6)', // Light green
+      Fantasy: 'rgba(153, 102, 255, 0.6)', // Light purple
+      History: 'rgba(255, 159, 64, 0.6)'  // Light orange
+    };
+  
+    // Fallback color if the genre is not in the map
+    const defaultColor = 'rgba(200, 200, 200, 0.6)'; // Light gray
+  
+    // Fetch JSON and create chart
+    fetch('books.json')
+      .then(response => response.json())
+      .then(books => {
+
+      // Find min and max length values
+      const minLength = Math.min(...books.map(book => book.lenght));
+      const maxLength = Math.max(...books.map(book => book.lenght));
+
+      // Function to normalize bubble sizes
+      const normalize = (value, min, max, newMin, newMax) =>
+        ((value - min) / (max - min)) * (newMax - newMin) + newMin;
+        // Transform data for Chart.js and assign colors based on genre
+        const chartData = books.map(book => ({
+          x: +book.realeaseDate,
+          y: +book.realism_value,
+          r: normalize(book.lenght, 50, 1000, 5, 40),
+          borderColor: 'white', // Black border
+          borderWidth: 0.3, // Set border width
+          genre: book.genre,
+          backgroundColor: genreColorMap[book.genre] || defaultColor // Use genre color or fallback
+        }));
+  
+        const minReleaseYear = Math.min(...chartData.map(d => d.x)) - 1;
+        const maxReleaseYear = Math.max(...chartData.map(d => d.x)) + 1;
+  
+        const data = {
+          datasets: [
+            {
+              label: 'Book Statistics',
+              data: chartData, // Pass full data points including genre
+              backgroundColor: chartData.map(point => point.backgroundColor),
+              borderColor: chartData.map(point => point.borderColor), // Apply border color
+              borderWidth: chartData.map(point => point.borderWidth)  // Apply border width
+            }
+          ]
+        };
+  
+        const config = {
+          type: 'bubble',
+          data: data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false, // Disable aspect ratio to control dimensions manually
+            plugins: {
+              legend: {
+                position: 'top',
+                display: false,
+                labels: {
+                  color: 'white'
+                }
+              },
+              title: {
+                display: true,
+                text: 'What do we read?',
+                color: 'white',
+                font: {
+                  size: 16,
+                  weight: 'bold'
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const dataPoint = context.raw; // Access the full data point
+                    return `Genre: ${dataPoint.genre || 'Unknown'}`; // Show genre or "Unknown"
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                type: 'linear',
+                title: {
+                  display: true,
+                  text: 'Release Year',
+                  color: 'white',
+                  font: {
+                    weight: 'bold',
+                    size: 22
+                  }
+                },
+                min: minReleaseYear - 4,
+                max: 2030,
+                ticks: {
+                  color: 'white',
+                  callback: function(value) {
+                    return value;
+                  }
+                },
+                grid: {
+                  color: 'rgba(200, 200, 200, 0.2)'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Realism',
+                  color: 'white',
+                  font: {
+                    weight: 'bold',
+                    size: 22
+                  }
+                },
+                min: 0,
+                max: 10,
+                ticks: {
+                  color: 'white'
+                },
+                grid: {
+                  color: 'rgba(200, 200, 200, 0.2)'
+                }
+              }
+            }
+          },
+        };
+  
+        new Chart(document.getElementById('bubbleChart'), config);
+      })
+      .catch(error => console.error('Error fetching the JSON:', error));
+  </script>
+  </body>
+</html>
