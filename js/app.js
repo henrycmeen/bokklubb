@@ -1,16 +1,43 @@
-// Fetch and display books on the grid
-fetch('books.json')
-  .then(response => response.json())
-  .then(data => {
-    const grid = document.getElementById('bookGrid');
-    data.forEach(book => {
-      const bookDiv = document.createElement('div');
-      bookDiv.innerHTML = `
-        <a href="book.html?id=${book.id}">
-          <img src="${book.cover}" alt="${book.title}">
-        </a>
-      `;
-      grid.appendChild(bookDiv);
-    });
-  })
-  .catch(err => console.error('Error fetching book data:', err));
+// Get the current JSON source from URL parameters or default to books.json
+const params = new URLSearchParams(window.location.search);
+const source = params.get('source') || 'books.json';
+
+// Function to fetch and display books from a given JSON file
+function fetchAndDisplayBooks(jsonFile) {
+  fetch(jsonFile)
+    .then(response => response.json())
+    .then(data => {
+      const grid = document.getElementById('bookGrid');
+      grid.innerHTML = ''; // Clear the grid
+      data.forEach(book => {
+        const bookDiv = document.createElement('div');
+        bookDiv.innerHTML = `
+          <a href="book.html?id=${book.id}&source=${jsonFile}">
+            <img src="${book.cover}" alt="${book.title}">
+          </a>
+        `;
+        grid.appendChild(bookDiv);
+      });
+    })
+    .catch(err => console.error(`Error fetching data from ${jsonFile}:`, err));
+}
+
+// Load books from the correct source
+fetchAndDisplayBooks(source);
+
+// Add event listeners for the sidebar buttons
+document.getElementById('rasmusButton').addEventListener('click', () => {
+  window.location.href = `index.html?source=rasmus.json`;
+});
+
+document.getElementById('henryButton').addEventListener('click', () => {
+  window.location.href = `index.html?source=henry.json`;
+});
+
+document.getElementById('andreButton').addEventListener('click', () => {
+  window.location.href = `index.html?source=andre.json`;
+});
+
+document.getElementById('backButton').addEventListener('click', () => {
+  window.location.href = `index.html?source=books.json`;
+});

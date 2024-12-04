@@ -28,7 +28,12 @@
   <script>
     // Function to navigate back to the grid page
     function goToGrid() {
-      window.location.href = "index.html";
+      // Extract the source JSON from the URL parameters
+      const params = new URLSearchParams(window.location.search);
+      const source = params.get('source') || 'books.json'; // Default to books.json if no source is provided
+  
+      // Redirect to the grid page with the source parameter
+      window.location.href = `index.html?source=${source}`;
     }
   </script>
 </body>

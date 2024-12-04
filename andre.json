@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "After Dark",
+    "author": "Haruki Murakami",
+    "cover": "assets/afterdark.jpg",
+    "realeaseDate": 2004,
+    "genre": "Fiction",
+    "realism_value": 6,
+    "lenght": 201,
+    "description": "A a surreal, atmospheric novel that explores the interconnected lives of strangers during a single enigmatic night in Tokyo.",
+    "readDate": "16 November - 30 November / 2024",
+    "quotes": {
+      "rasmus": "Dualisme og friheten som en sovende by kan tilby.  After Dark utforsker kontrastene i menneskelivet gjennom nattens transformasjon av Tokyo. Natten åpner opp for et annet liv, der mennesker får muligheten til å være noe annet, kanskje noe mer ekte, men kun for en kort stund. Kontraster som natt og dag, Mari og Eri, og Shirakawas tosidige natur fyller fortellingen med motstridende skjebner og livsvalg. Den kinesiske jentas skjebne illustrerer hvor tynn linjen kan være mellom tilhørighet og utenforskap, mens Takahashis refleksjoner viser hvor lett det er å velge feil vei. Dette fungerer som en sterk påminnelse om hvor små avstander det kan være mellom lys og mørke, tilstedeværelse og fravær, og hvordan nattens frihet kun varer til dagslyset bryter frem.",
+      "henry": "Byen ser alt, men forstår lite - et levende system skapt av oss. Mennesker har gitt liv til abstrakte systemer som økonomi, politikk og teknologi, men vi har også mistet kontroll over dem. TV-skjermen på rommet til Eri kan symbolisere byens konstante press. Skjulte sider av oss kommer frem om natten, i kontrast til dagens maske av hvordan vi ønsker å fremstå. Historien om den kinesiske kvinnen viser hvordan vold ofte skjer i skyggene, uten konsekvenser – en påminnelse om både samfunnets likegyldighet og de mørke kreftene som kan ligge skjult i oss alle. Nettopp i byens mørke finner vi et rom der våre sanne ansikter kan komme til syne. :)",
+      "andre": ""
+    }
+  },
+  {
+    "id": 2,
+    "title": "The Day The Sun Died",
+    "author": "Yan Lianke",
+    "cover": "assets/sundied.jpg",
+    "realeaseDate": 2017,
+    "genre": "Fiction",
+    "realism_value": 4,
+    "lenght": 336,
+    "description": "The Day The Sun Died by Yan Lianke is a darkly satirical novel about a small village descending into chaos as its residents, caught in a nightmarish state of “dreamwalking,” blur the lines between reality and dream, exposing the fragility of societal order.",
+    "readDate": "30 November - ? / ?",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
+  }
+]
+
+
