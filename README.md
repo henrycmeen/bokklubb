@@ -41,7 +41,7 @@ Each book entry must contain the following fields:
 - **`realism_value`** (integer): A rating from 1 to 10 representing the realism level of the book.  
   Example: `6`
 
-  - **`country`** (string): Orgin of the author.  
+- **`country`** (string): Orgin of the author.  
   Example: `Norway`
 
 - **`latitude`** (float): The latitude coordinate representing the book's geographical setting or origin.  
