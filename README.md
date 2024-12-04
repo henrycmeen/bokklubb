@@ -9,8 +9,13 @@ This README explains the required structure of the JSON file for book entries. E
 Each book entry must contain the following fields:
 
 ### **1. Basic Information**
-- **`id`** (integer): A unique identifier for the book.  
-  Example: `1`
+- **`id`** (integer): A unique identifier for the book.
+  Different people will have different IDs:
+  Bookclub: 1000X
+  Rasmus:   2000X
+  Henry:    3000X
+  Andre:    4000X
+
 
 - **`title`** (string): The title of the book.  
   Example: `"After Dark"`

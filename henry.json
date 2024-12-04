@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": 30001,
     "title": "After Dark",
     "author": "Haruki Murakami",
     "cover": "assets/afterdark.jpg",
@@ -20,7 +20,7 @@
     }
   },
   {
-    "id": 2,
+    "id": 30002,
     "title": "The Day The Sun Died",
     "author": "Yan Lianke",
     "cover": "assets/sundied.jpg",
