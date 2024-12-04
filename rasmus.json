@@ -8,6 +8,8 @@
     "genre": "Fiction",
     "realism_value": 6,
     "lenght": 201,
+    "latitude":36.2048,
+    "longitude":138.2529,
     "description": "A a surreal, atmospheric novel that explores the interconnected lives of strangers during a single enigmatic night in Tokyo.",
     "readDate": "16 November - 30 November / 2024",
     "quotes": {
@@ -25,6 +27,8 @@
     "genre": "Fiction",
     "realism_value": 4,
     "lenght": 336,
+    "latitude":35.8617,
+    "longitude":104.1954,
     "description": "The Day The Sun Died by Yan Lianke is a darkly satirical novel about a small village descending into chaos as its residents, caught in a nightmarish state of “dreamwalking,” blur the lines between reality and dream, exposing the fragility of societal order.",
     "readDate": "30 November - ? / ?",
     "quotes": {
@@ -42,6 +46,8 @@
     "genre": "ScienceFiction",
     "realism_value": 3,
     "lenght": 400,
+    "latitude":35.8617,
+    "longitude":104.1954,
     "description": "“The Three-Body Problem” by Liu Cixin is a mind-bending science fiction novel that explores humanity’s first contact with an alien civilization, blending astrophysics, political intrigue, and philosophical questions about survival and trust.",
     "readDate": "05 December - ? / ?",
     "quotes": {
@@ -59,6 +65,8 @@
     "genre": "NonFiction",
     "realism_value": 10,
     "lenght": 496,
+    "latitude":20.5937,
+    "longitude":78.9629,
     "description": "“The Song of the Cell” by Siddhartha Mukherjee is a fascinating exploration of the discovery, science, and future of cells, revealing their profound role as the building blocks of life and the key to medical innovation.",
     "readDate": "10 October - ? / ?",
     "quotes": {

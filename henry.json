@@ -8,6 +8,8 @@
     "genre": "Fiction",
     "realism_value": 6,
     "lenght": 201,
+    "latitude":36.2048,
+    "longitude":138.2529,
     "description": "A a surreal, atmospheric novel that explores the interconnected lives of strangers during a single enigmatic night in Tokyo.",
     "readDate": "16 November - 30 November / 2024",
     "quotes": {
@@ -25,6 +27,8 @@
     "genre": "Fiction",
     "realism_value": 4,
     "lenght": 336,
+    "latitude":35.8617,
+    "longitude":104.1954,
     "description": "The Day The Sun Died by Yan Lianke is a darkly satirical novel about a small village descending into chaos as its residents, caught in a nightmarish state of “dreamwalking,” blur the lines between reality and dream, exposing the fragility of societal order.",
     "readDate": "30 November - ? / ?",
     "quotes": {

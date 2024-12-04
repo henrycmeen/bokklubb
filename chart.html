@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Book Club Statistics</title>
+
   <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -14,7 +15,7 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      background-color: black;
+      background-color: black; 
     }
 
     .chart-container {
@@ -33,53 +34,83 @@
 <body>
   <a href="index.html" class="index-button" style="position: absolute; top: 10px; left: 10px; font-size: 24px; color: white; text-decoration: none;">-</a>
   <div class="vertical-text" onclick="animatePage(event)">MUSERNES BOKKLUBB - 2024</div>
+  <div class="chart-controls" style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%); z-index: 10; text-align: center;">
+    <label for="chartSelector" style="font-size: 20px; color: white; margin-right: 5px; font-weight: bold;"></label>
+    <select id="chartSelector" style="font-size: 20px; color: white; font-weight: bold; background: none; border: none; appearance: none; outline: none; cursor: pointer;">
+      <option value="whatDoWeRead" selected>What do we read?</option>
+      <option value="whereDoTheyWrite">Where do they write?</option>
+    </select>
+  </div>
   <div class="chart-container">
     <canvas id="bubbleChart"></canvas>
   </div>
   <script>
-    // Define a color palette for different genres
-    const genreColorMap = {
-        Fiction: 'rgba(255, 99, 132, 0.6)', // Light red
-        NonFiction: 'rgba(54, 162, 235, 0.6)', // Light blue
-        ScienceFiction: 'rgba(255, 206, 86, 0.6)', // Light yellow
-        Science: 'rgba(75, 192, 192, 0.6)', // Light green
-        Fantasy: 'rgba(153, 102, 255, 0.6)', // Light purple
-        History: 'rgba(255, 159, 64, 0.6)'  // Light orange
-    };
+// Define a color palette for different genres
+const genreColorMap = {
+    Fiction: 'rgba(255, 99, 132, 0.6)', // Light red
+    NonFiction: 'rgba(54, 162, 235, 0.6)', // Light blue
+    ScienceFiction: 'rgba(255, 206, 86, 0.6)', // Light yellow
+    Science: 'rgba(75, 192, 192, 0.6)', // Light green
+    Fantasy: 'rgba(153, 102, 255, 0.6)', // Light purple
+    History: 'rgba(255, 159, 64, 0.6)'  // Light orange
+};
 
-    // Fallback color if the genre is not in the map
-    const defaultColor = 'rgba(200, 200, 200, 0.6)'; // Light gray
+// Fallback color if the genre is not in the map
+const defaultColor = 'rgba(200, 200, 200, 0.6)'; // Light gray
 
-    // Extract the JSON source from the URL
-    const params = new URLSearchParams(window.location.search);
-    const source = params.get('source') || 'books.json'; // Default to books.json if no source is provided
+// Extract the JSON source from the URL
+const params = new URLSearchParams(window.location.search);
+const source = params.get('source') || 'books.json'; // Default to books.json if no source is provided
 
-    // Fetch JSON and create chart
+let currentChart; // To store the current chart instance
+
+// Define chart configurations
+const chartConfigs = {
+    whatDoWeRead: {
+        xAxis: 'realeaseDate',
+        yAxis: 'realism_value',
+        rAxis: 'lenght',
+    },
+    whereDoTheyWrite: {
+        xAxis: 'latitude', // Assuming books.json has authorLocation data
+        yAxis: 'longitude',
+        rAxis: 'lenght',
+    }
+};
+
+// Function to normalize bubble sizes
+const normalize = (value, min, max, newMin, newMax) =>
+    ((value - min) / (max - min)) * (newMax - newMin) + newMin;
+
+// Function to fetch data and render the chart
+function fetchAndRenderChart(chartType) {
+    const config = chartConfigs[chartType];
+
     fetch(source)
         .then(response => response.json())
         .then(books => {
-            // Find min and max length values
-            const minLength = Math.min(...books.map(book => book.lenght));
-            const maxLength = Math.max(...books.map(book => book.lenght));
+            const xValues = books.map(book => +book[config.xAxis]);
+            const yValues = books.map(book => +book[config.yAxis]);
+            const rValues = books.map(book => +book[config.rAxis]);
 
-            // Function to normalize bubble sizes
-            const normalize = (value, min, max, newMin, newMax) =>
-                ((value - min) / (max - min)) * (newMax - newMin) + newMin;
+            const minX = Math.min(...xValues);
+            const maxX = Math.max(...xValues);
+            const minY = Math.min(...yValues);
+            const maxY = Math.max(...yValues);
+            const minR = Math.min(...rValues);
+            const maxR = Math.max(...rValues);
 
             // Transform data for Chart.js and assign colors based on genre
             const chartData = books.map(book => ({
-                x: +book.realeaseDate,
-                y: +book.realism_value,
-                r: normalize(book.lenght, minLength, maxLength, 10, 30),
-                name: book.title, // Include book name
-                borderColor: 'white', // Black border
-                borderWidth: 0.3, // Set border width
+                x: parseInt(book[config.xAxis], 10),
+                y: +book[config.yAxis],
+                r: normalize(book[config.rAxis], minR, maxR, 10, 30),
+                name: book.title,
+                borderColor: 'white',
+                borderWidth: 0.3,
                 genre: book.genre,
-                backgroundColor: genreColorMap[book.genre] || defaultColor // Use genre color or fallback
+                backgroundColor: genreColorMap[book.genre] || defaultColor
             }));
-
-            const minReleaseYear = Math.min(...chartData.map(d => d.x)) - 1;
-            const maxReleaseYear = Math.max(...chartData.map(d => d.x)) + 1;
 
             const genreGroups = {};
 
@@ -100,97 +131,124 @@
                 borderWidth: 0.3, // Set bubble border width
             }));
 
-            // Update the data configuration
-            const data = {
-                datasets: datasets, // Use the dynamically generated datasets
-            };
+            const data = { datasets };
 
-            const config = {
-                type: 'bubble',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // Disable aspect ratio to control dimensions manually
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                color: 'white', // Set legend text color
-                                font: {
-                                    size: 14, // Adjust font size
-                                    weight: 'bold' // Make text bold
-                                }
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'What do we read?',
-                            color: 'white',
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    const dataPoint = context.raw; // Access the raw data point
-                                    const bookName = dataPoint.name || "Unknown"; // Get the book name or fallback
-                                    return `${bookName}`; // Display the book name
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            title: {
-                                display: true,
-                                text: 'Release Year',
-                                color: 'white',
-                                font: {
-                                    weight: 'bold',
-                                    size: 22
-                                }
-                            },
-                            min: minReleaseYear - 4,
-                            max: 2030,
-                            ticks: {
-                                color: 'white',
-                                callback: function (value) {
-                                    return value;
-                                }
-                            },
-                            grid: {
-                                color: 'rgba(200, 200, 200, 0.2)'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Realism',
-                                color: 'white',
-                                font: {
-                                    weight: 'bold',
-                                    size: 22
-                                }
-                            },
-                            min: 0,
-                            max: 10,
-                            ticks: {
-                                color: 'white'
-                            },
-                            grid: {
-                                color: 'rgba(200, 200, 200, 0.2)'
-                            }
-                        }
-                    }
-                },
-            };
+            const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            position: 'top',
+            labels: {
+                color: 'white',
+                font: {
+                    size: 14,
+                    weight: 'bold'
+                }
+            }
+        },
+        title: {
+            display: true,
+            text: config.title,
+            color: 'white',
+            font: {
+                size: 16,
+                weight: 'bold'
+            }
+        },
+        tooltip: {
+            callbacks: {
+                label: function (context) {
+                    const dataPoint = context.raw;
+                    return `${dataPoint.name}`;
+                }
+            }
+        }
+    },
+    scales: chartType === 'whereDoTheyWrite'
+    ? {
+        x: {
+            title: {
+                display: true,
+                text: 'Latitude',
+                color: 'white',
+                font: { weight: 'bold', size: 22 }
+            },
+            min: -90,
+            max: 90,
+            ticks: {
+                color: 'white',
+                callback: value => value.toFixed(2)
+            },
+            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+        },
+        y: {
+            title: {
+                display: true,
+                text: 'Longitude',
+                color: 'white',
+                font: { weight: 'bold', size: 22 }
+            },
+            min: -180,
+            max: 180,
+            ticks: {
+                color: 'white',
+                callback: value => value.toFixed(2)
+            },
+            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+        }
+    }
+    : {
+        x: {
+            title: {
+                display: true,
+                text: 'Release Year', // Adjusted text for clarity
+                color: 'white',
+                font: { weight: 'bold', size: 22 }
+            },
+            min: minX - 10, // Add padding to the minimum x-axis value
+            max: maxX + 10, // Add padding to the maximum x-axis value
+            ticks: {
+                color: 'white',
+                callback: value => value.toString().replace(/,/g, '') // Remove commas from year
+            },
+            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+        },
+        y: {
+            title: {
+                display: true,
+                text: 'Realism', // Adjusted text for clarity
+                color: 'white',
+                font: { weight: 'bold', size: 22 }
+            },
+            min: minY - 1, // Add padding to the minimum y-axis value
+            max: maxY + 1, // Add padding to the maximum y-axis value
+            ticks: {
+                color: 'white'
+            },
+            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+        }
+    }
+};
 
-            new Chart(document.getElementById('bubbleChart'), config);
+            if (currentChart) {
+                currentChart.destroy(); // Destroy the existing chart
+            }
+
+            const ctx = document.getElementById('bubbleChart').getContext('2d');
+            currentChart = new Chart(ctx, { type: 'bubble', data, options: chartOptions });
         })
         .catch(error => console.error('Error fetching the JSON:', error));
+}
+
+// Add event listener for dropdown menu
+document.getElementById('chartSelector').addEventListener('change', (event) => {
+    const selectedChart = event.target.value;
+    fetchAndRenderChart(selectedChart);
+});
+
+// Initial chart render
+fetchAndRenderChart('whatDoWeRead');
 </script>
   </body>
 </html>
