@@ -2,6 +2,10 @@
 const params = new URLSearchParams(window.location.search);
 const source = params.get('source') || 'books.json';
 
+// Dynamically update the "+" button's href based on the current source
+const chartButton = document.querySelector('.chart-button');
+chartButton.href = `chart.html?source=${source}`;
+
 // Function to fetch and display books from a given JSON file
 function fetchAndDisplayBooks(jsonFile) {
   fetch(jsonFile)

@@ -39,154 +39,158 @@
   <script>
     // Define a color palette for different genres
     const genreColorMap = {
-      Fiction: 'rgba(255, 99, 132, 0.6)', // Light red
-      Satire: 'rgba(54, 162, 235, 0.6)', // Light blue
-      Mystery: 'rgba(255, 206, 86, 0.6)', // Light yellow
-      Science: 'rgba(75, 192, 192, 0.6)', // Light green
-      Fantasy: 'rgba(153, 102, 255, 0.6)', // Light purple
-      History: 'rgba(255, 159, 64, 0.6)'  // Light orange
+        Fiction: 'rgba(255, 99, 132, 0.6)', // Light red
+        NonFiction: 'rgba(54, 162, 235, 0.6)', // Light blue
+        ScienceFiction: 'rgba(255, 206, 86, 0.6)', // Light yellow
+        Science: 'rgba(75, 192, 192, 0.6)', // Light green
+        Fantasy: 'rgba(153, 102, 255, 0.6)', // Light purple
+        History: 'rgba(255, 159, 64, 0.6)'  // Light orange
     };
-  
+
     // Fallback color if the genre is not in the map
     const defaultColor = 'rgba(200, 200, 200, 0.6)'; // Light gray
-  
+
+    // Extract the JSON source from the URL
+    const params = new URLSearchParams(window.location.search);
+    const source = params.get('source') || 'books.json'; // Default to books.json if no source is provided
+
     // Fetch JSON and create chart
-    fetch('books.json')
-      .then(response => response.json())
-      .then(books => {
+    fetch(source)
+        .then(response => response.json())
+        .then(books => {
+            // Find min and max length values
+            const minLength = Math.min(...books.map(book => book.lenght));
+            const maxLength = Math.max(...books.map(book => book.lenght));
 
-      // Find min and max length values
-      const minLength = Math.min(...books.map(book => book.lenght));
-      const maxLength = Math.max(...books.map(book => book.lenght));
+            // Function to normalize bubble sizes
+            const normalize = (value, min, max, newMin, newMax) =>
+                ((value - min) / (max - min)) * (newMax - newMin) + newMin;
 
-      // Function to normalize bubble sizes
-      const normalize = (value, min, max, newMin, newMax) =>
-        ((value - min) / (max - min)) * (newMax - newMin) + newMin;
-        // Transform data for Chart.js and assign colors based on genre
-        const chartData = books.map(book => ({
-          x: +book.realeaseDate,
-          y: +book.realism_value,
-          r: normalize(book.lenght, 50, 1000, 5, 40),
-          name: book.title, // Include book name
-          borderColor: 'white', // Black border
-          borderWidth: 0.3, // Set border width
-          genre: book.genre,
-          backgroundColor: genreColorMap[book.genre] || defaultColor // Use genre color or fallback
-        }));
-  
-        const minReleaseYear = Math.min(...chartData.map(d => d.x)) - 1;
-        const maxReleaseYear = Math.max(...chartData.map(d => d.x)) + 1;
-  
-        const genreGroups = {};
+            // Transform data for Chart.js and assign colors based on genre
+            const chartData = books.map(book => ({
+                x: +book.realeaseDate,
+                y: +book.realism_value,
+                r: normalize(book.lenght, minLength, maxLength, 10, 30),
+                name: book.title, // Include book name
+                borderColor: 'white', // Black border
+                borderWidth: 0.3, // Set border width
+                genre: book.genre,
+                backgroundColor: genreColorMap[book.genre] || defaultColor // Use genre color or fallback
+            }));
 
-        chartData.forEach((point) => {
-        const genre = point.genre || "Unknown"; // Fallback to "Unknown" for missing genres
-        if (!genreGroups[genre]) {
-            genreGroups[genre] = [];
-        }
-        genreGroups[genre].push(point); // Add the data point to the corresponding genre group
-        });
+            const minReleaseYear = Math.min(...chartData.map(d => d.x)) - 1;
+            const maxReleaseYear = Math.max(...chartData.map(d => d.x)) + 1;
 
-        // Create datasets for each genre
-        const datasets = Object.keys(genreGroups).map((genre) => ({
-        label: genre, // Set the genre as the dataset label
-        data: genreGroups[genre], // Data points for this genre
-        backgroundColor: genreColorMap[genre] || defaultColor, // Set genre-specific color
-        borderColor: "white", // Set bubble border color
-        borderWidth: 0.3, // Set bubble border width
-        }));
+            const genreGroups = {};
 
-        // Update the data configuration
-        const data = {
-        datasets: datasets, // Use the dynamically generated datasets
-        };
-  
-        const config = {
-          type: 'bubble',
-          data: data,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false, // Disable aspect ratio to control dimensions manually
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                    color: 'white', // Set legend text color
-                    font: {
-                        size: 14, // Adjust font size
-                        weight: 'bold' // Make text bold
+            chartData.forEach((point) => {
+                const genre = point.genre || "Unknown"; // Fallback to "Unknown" for missing genres
+                if (!genreGroups[genre]) {
+                    genreGroups[genre] = [];
+                }
+                genreGroups[genre].push(point); // Add the data point to the corresponding genre group
+            });
+
+            // Create datasets for each genre
+            const datasets = Object.keys(genreGroups).map((genre) => ({
+                label: genre, // Set the genre as the dataset label
+                data: genreGroups[genre], // Data points for this genre
+                backgroundColor: genreColorMap[genre] || defaultColor, // Set genre-specific color
+                borderColor: "white", // Set bubble border color
+                borderWidth: 0.3, // Set bubble border width
+            }));
+
+            // Update the data configuration
+            const data = {
+                datasets: datasets, // Use the dynamically generated datasets
+            };
+
+            const config = {
+                type: 'bubble',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Disable aspect ratio to control dimensions manually
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: 'white', // Set legend text color
+                                font: {
+                                    size: 14, // Adjust font size
+                                    weight: 'bold' // Make text bold
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'What do we read?',
+                            color: 'white',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const dataPoint = context.raw; // Access the raw data point
+                                    const bookName = dataPoint.name || "Unknown"; // Get the book name or fallback
+                                    return `${bookName}`; // Display the book name
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Release Year',
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                    size: 22
+                                }
+                            },
+                            min: minReleaseYear - 4,
+                            max: 2030,
+                            ticks: {
+                                color: 'white',
+                                callback: function (value) {
+                                    return value;
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(200, 200, 200, 0.2)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Realism',
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                    size: 22
+                                }
+                            },
+                            min: 0,
+                            max: 10,
+                            ticks: {
+                                color: 'white'
+                            },
+                            grid: {
+                                color: 'rgba(200, 200, 200, 0.2)'
+                            }
+                        }
                     }
-                    }
-                },              
-                title: {
-                    display: true,
-                    text: 'What do we read?',
-                    color: 'white',
-                    font: {
-                    size: 16,
-                    weight: 'bold'
-                }
-              },
-              tooltip: {
-                callbacks: {
-                    label: function (context) {
-                    const dataPoint = context.raw; // Access the raw data point
-                    const bookName = dataPoint.name || "Unknown"; // Get the book name or fallback
-                    return `${bookName}`; // Display the book name
-                  }
-                }
-              }
-            },
-            scales: {
-              x: {
-                type: 'linear',
-                title: {
-                  display: true,
-                  text: 'Release Year',
-                  color: 'white',
-                  font: {
-                    weight: 'bold',
-                    size: 22
-                  }
                 },
-                min: minReleaseYear - 4,
-                max: 2030,
-                ticks: {
-                  color: 'white',
-                  callback: function(value) {
-                    return value;
-                  }
-                },
-                grid: {
-                  color: 'rgba(200, 200, 200, 0.2)'
-                }
-              },
-              y: {
-                title: {
-                  display: true,
-                  text: 'Realism',
-                  color: 'white',
-                  font: {
-                    weight: 'bold',
-                    size: 22
-                  }
-                },
-                min: 0,
-                max: 10,
-                ticks: {
-                  color: 'white'
-                },
-                grid: {
-                  color: 'rgba(200, 200, 200, 0.2)'
-                }
-              }
-            }
-          },
-        };
-  
-        new Chart(document.getElementById('bubbleChart'), config);
-      })
-      .catch(error => console.error('Error fetching the JSON:', error));
-  </script>
+            };
+
+            new Chart(document.getElementById('bubbleChart'), config);
+        })
+        .catch(error => console.error('Error fetching the JSON:', error));
+</script>
   </body>
 </html>
