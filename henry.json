@@ -37,6 +37,25 @@
       "rasmus": "",
       "henry": "",
       "andre": ""
+    },
+    {
+    "id": 30003,
+    "title": "The Vegetarian",
+    "author": "Han Kang",
+    "cover": "assets/vegetarian.jpg",
+    "releaseDate": 2007,
+    "genre": "Fiction",
+    "realism_value": 7,
+    "length": 188,
+    "country": "South Korea",
+    "latitude": 35.9078,
+    "longitude": 127.7669,
+    "description": "The Vegetarian by Han Kang is a haunting novel about a woman’s decision to renounce meat and its cascading effects on her family and psyche, exploring themes of desire, control, and the boundaries of societal norms.",
+    "readDate": "1 December - ? / ?",
+    "quotes": {
+        "rasmus": "",
+        "henry": "",
+        "andre": ""
     }
   }
 ]
