@@ -55,6 +55,17 @@ const genreColorMap = {
     History: 'rgba(255, 159, 64, 0.6)'  // Light orange
 };
 
+// Object to store dynamically generated colors for countries
+const countryColorMap = {};
+
+// Function to generate a random RGBA color
+function generateRandomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgba(${r}, ${g}, ${b}, 0.6)`; // Alpha 0.6 for transparency
+}
+
 // Fallback color if the genre is not in the map
 const defaultColor = 'rgba(200, 200, 200, 0.6)'; // Light gray
 
@@ -106,30 +117,49 @@ function fetchAndRenderChart(chartType) {
                 y: +book[config.yAxis],
                 r: normalize(book[config.rAxis], minR, maxR, 10, 20),
                 name: book.title,
+                country: book.country || "Unknown",
                 borderColor: 'white',
                 borderWidth: 0.3,
                 genre: book.genre,
                 backgroundColor: genreColorMap[book.genre] || defaultColor
             }));
 
-            const genreGroups = {};
+            const legendGroups = {}; // Initialize an empty object for legend groups
 
-            chartData.forEach((point) => {
-                const genre = point.genre || "Unknown"; // Fallback to "Unknown" for missing genres
-                if (!genreGroups[genre]) {
-                    genreGroups[genre] = [];
-                }
-                genreGroups[genre].push(point); // Add the data point to the corresponding genre group
+            if (chartType === 'whereDoTheyWrite') {
+                // Group data points by country for "Where do they write?"
+                chartData.forEach((point) => {
+                    const country = point.country || "Unknown"; // Fallback to "Unknown" for missing countries
+                    if (!legendGroups[country]) {
+                        legendGroups[country] = []; // Create a new array for this country
+                    }
+                    legendGroups[country].push(point); // Add the data point to the country group
+                });
+            } else {
+                // Group data points by genre for "What do we read?"
+                chartData.forEach((point) => {
+                    const genre = point.genre || "Unknown"; // Fallback to "Unknown" for missing genres
+                    if (!legendGroups[genre]) {
+                        legendGroups[genre] = []; // Create a new array for this genre
+                    }
+                    legendGroups[genre].push(point); // Add the data point to the genre group
+                });
+            }
+
+            // Create datasets from the legend groups
+            const datasets = Object.keys(legendGroups).map((group) => {
+                const color = chartType === 'whereDoTheyWrite'
+                    ? (countryColorMap[group] = countryColorMap[group] || generateRandomColor())
+                    : genreColorMap[group] || defaultColor;
+
+                return {
+                    label: group, // Use the country or genre as the legend label
+                    data: legendGroups[group], // Data points for this group
+                    backgroundColor: color, // Dynamically assign color for countries or use genre color
+                    borderColor: "white", // Set bubble border color
+                    borderWidth: 0.3, // Set bubble border width
+                };
             });
-
-            // Create datasets for each genre
-            const datasets = Object.keys(genreGroups).map((genre) => ({
-                label: genre, // Set the genre as the dataset label
-                data: genreGroups[genre], // Data points for this genre
-                backgroundColor: genreColorMap[genre] || defaultColor, // Set genre-specific color
-                borderColor: "white", // Set bubble border color
-                borderWidth: 0.3, // Set bubble border width
-            }));
 
             const data = { datasets };
 
@@ -138,12 +168,14 @@ function fetchAndRenderChart(chartType) {
     maintainAspectRatio: false,
     plugins: {
         legend: {
-            position: 'top',
+            position: 'top', // Keep the legend at the top
             labels: {
-                color: 'white',
+                usePointStyle: true, // Use a custom point style for legend markers
+                pointStyle: 'circle', // Set the point style to a circle
+                color: 'white', // Set the legend text color to white
                 font: {
-                    size: 14,
-                    weight: 'bold'
+                    size: 14, // Adjust font size
+                    weight: 'bold' // Make font bold
                 }
             }
         },
