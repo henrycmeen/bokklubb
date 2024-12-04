@@ -72,8 +72,8 @@ const chartConfigs = {
         rAxis: 'lenght',
     },
     whereDoTheyWrite: {
-        xAxis: 'latitude', // Assuming books.json has authorLocation data
-        yAxis: 'longitude',
+        xAxis: 'longitude', 
+        yAxis: 'latitude',
         rAxis: 'lenght',
     }
 };
@@ -104,7 +104,7 @@ function fetchAndRenderChart(chartType) {
             const chartData = books.map(book => ({
                 x: parseInt(book[config.xAxis], 10),
                 y: +book[config.yAxis],
-                r: normalize(book[config.rAxis], minR, maxR, 10, 30),
+                r: normalize(book[config.rAxis], minR, maxR, 10, 20),
                 name: book.title,
                 borderColor: 'white',
                 borderWidth: 0.3,
@@ -170,12 +170,12 @@ function fetchAndRenderChart(chartType) {
         x: {
             title: {
                 display: true,
-                text: 'Latitude',
+                text: 'Longitude',
                 color: 'white',
                 font: { weight: 'bold', size: 22 }
             },
-            min: -90,
-            max: 90,
+            min: -180,
+            max: 180,
             ticks: {
                 color: 'white',
                 callback: value => value.toFixed(2)
@@ -185,12 +185,12 @@ function fetchAndRenderChart(chartType) {
         y: {
             title: {
                 display: true,
-                text: 'Longitude',
+                text: 'Latitude',
                 color: 'white',
                 font: { weight: 'bold', size: 22 }
             },
-            min: -180,
-            max: 180,
+            min: -90,
+            max: 90,
             ticks: {
                 color: 'white',
                 callback: value => value.toFixed(2)
