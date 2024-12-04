@@ -115,7 +115,7 @@ function fetchAndRenderChart(chartType) {
             const chartData = books.map(book => ({
                 x: parseInt(book[config.xAxis], 10),
                 y: +book[config.yAxis],
-                r: normalize(book[config.rAxis], minR, maxR, 10, 20),
+                r: normalize(book[config.rAxis], minR, maxR, 5, 12),
                 name: book.title,
                 country: book.country || "Unknown",
                 borderColor: 'white',
