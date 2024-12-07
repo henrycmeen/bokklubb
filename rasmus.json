@@ -60,6 +60,26 @@
     }
   },
   {
+    "id": 20004,
+    "title": "The Song of The Cell",
+    "author": "Siddhartha Mukherjee",
+    "cover": "assets/songcell.jpg",
+    "realeaseDate": 2022,
+    "genre": "NonFiction",
+    "realism_value": 10,
+    "lenght": 496,
+    "country": "India",
+    "latitude":20.5937,
+    "longitude":78.9629,
+    "description": "“The Song of the Cell” by Siddhartha Mukherjee is a fascinating exploration of the discovery, science, and future of cells, revealing their profound role as the building blocks of life and the key to medical innovation.",
+    "readDate": "10 October - ? / ?",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
+  },
+  {
     "id": 20005,
     "title": "Cold Enough for Snow",
     "author": "Jessica Au",
@@ -138,7 +158,48 @@
       "henry": "",
       "andre": ""
     }
+  },
+  {
+    "id": 20009,
+    "title": "Mild Vertigo",
+    "author": "Mieko Kanai",
+    "cover": "assets/vertigo.jpg",
+    "realeaseDate": 2023,
+    "genre": "Fiction",
+    "realism_value": 9,
+    "lenght": 192,
+    "country": "Japan",
+    "latitude":36.2048,
+    "longitude":138.2529,
+    "description": "Mild Vertigo by Mieko Kanai is a contemplative novel that delves into the monotonous routines of a Tokyo housewife, Natsumi, capturing the subtle disquiet and introspection that permeate her daily life",
+    "readDate": "17 June - 31 June / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
+  },
+  {
+    "id": 20010,
+    "title": "The Last Children of Tokyo",
+    "author": "Yoko Tawada",
+    "cover": "assets/childrenoftokyo.jpg",
+    "realeaseDate": 2014,
+    "genre": "Fiction",
+    "realism_value": 6,
+    "lenght": 144,
+    "country": "Japan",
+    "latitude":36.2048,
+    "longitude":138.2529,
+    "description": "The Last Children of Tokyo by Yoko Tawada is a haunting novel that envisions a future Japan where the elderly outlive the young, exploring themes of love, loss, and the cyclical nature of life through the eyes of a grandfather and his grandson.",
+    "readDate": "1 June - 31 June / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
   }
+
 ]
 
 

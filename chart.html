@@ -37,7 +37,7 @@
   <div class="chart-controls" style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%); z-index: 10; text-align: center;">
     <label for="chartSelector" style="font-size: 20px; color: white; margin-right: 5px; font-weight: bold;"></label>
     <select id="chartSelector" style="font-size: 20px; color: white; font-weight: bold; background: none; border: none; appearance: none; outline: none; cursor: pointer;">
-      <option value="whatDoWeRead" selected>What do we read?</option>
+      <option value="howRealisIt" selected>How real is it?</option>
       <option value="whereDoTheyWrite">Where do they write?</option>
     </select>
   </div>
@@ -77,7 +77,7 @@ let currentChart; // To store the current chart instance
 
 // Define chart configurations
 const chartConfigs = {
-    whatDoWeRead: {
+    howRealisIt: {
         xAxis: 'realeaseDate',
         yAxis: 'realism_value',
         rAxis: 'lenght',
@@ -136,7 +136,7 @@ function fetchAndRenderChart(chartType) {
                     legendGroups[country].push(point); // Add the data point to the country group
                 });
             } else {
-                // Group data points by genre for "What do we read?"
+                // Group data points by genre for "how real is it?"
                 chartData.forEach((point) => {
                     const genre = point.genre || "Unknown"; // Fallback to "Unknown" for missing genres
                     if (!legendGroups[genre]) {
@@ -280,7 +280,7 @@ document.getElementById('chartSelector').addEventListener('change', (event) => {
 });
 
 // Initial chart render
-fetchAndRenderChart('whatDoWeRead');
+fetchAndRenderChart('howRealisIt');
 </script>
   </body>
 </html>
