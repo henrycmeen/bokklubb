@@ -238,6 +238,146 @@
       "henry": "",
       "andre": ""
     }
+  },
+  {
+    "id": 20013,
+    "title": "The Hole",
+    "author": "Hiroko Oyamada",
+    "cover": "assets/thehole.jpg",
+    "realeaseDate": 2014,
+    "genre": "Fiction",
+    "realism_value": 7,
+    "lenght": 128,
+    "country": "Japan",
+    "latitude":36.2048,
+    "longitude":138.2529,
+    "description": "The Hole by Hiroko Oyamada is a surreal novel that follows three characters as they navigate the strange and unsettling changes in their lives, exploring themes of isolation, identity, and the search for meaning in a world that defies logic and reason.",
+    "readDate": "1 November - 15 November / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
+  },
+  {
+    "id": 20014,
+    "title": "Cursed Bunny",
+    "author": "Bora Chung",
+    "cover": "assets/cursedbuny.jpg",
+    "realeaseDate": 2013,
+    "genre": "Fiction",
+    "realism_value": 2,
+    "lenght": 128,
+    "country": "South Korea",
+    "latitude":35.9078,
+    "longitude":127.7669,
+    "description": "Cursed Bunny by Bora Chung is a surreal novel that follows a woman’s journey through a series of bizarre and unsettling events, exploring themes of identity, memory, and the blurred boundaries between reality and fantasy.",
+    "readDate": "15 November - 30 November / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
+  },
+  {
+    "id": 20015,
+    "title": "The Dream of Ding Village",
+    "author": "Yan Lianke",
+    "cover": "assets/dingvillage.jpg",
+    "realeaseDate": 2005,
+    "genre": "Fiction",
+    "realism_value": 7,
+    "lenght": 336,
+    "country": "China",
+    "latitude":35.8617,
+    "longitude":104.1954,
+    "description": "The Dream of Ding Village by Yan Lianke is a powerful novel that exposes the devastating impact of the AIDS epidemic on a rural Chinese village, exploring themes of greed, corruption, and the human cost of progress.",
+    "readDate": "25 October - 15 November / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
+  },
+  {
+    "id": 20016,
+    "title": "Tokyo Ueno Station",
+    "author": "Yū Miri",
+    "cover": "assets/uenostation.jpg",
+    "realeaseDate": 2014,
+    "genre": "Fiction",
+    "realism_value": 8,
+    "lenght": 192,
+    "country": "Japan",
+    "latitude":36.2048,
+    "longitude":138.2529,
+    "description": "Tokyo Ueno Station by Yū Miri is a poignant novel that follows the ghost of a homeless ghost as he reflects on his life and the changes in Tokyo over the years, exploring themes of loss, displacement, and the transient nature of existence.",
+    "readDate": "28 July - 10 August / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
+  },
+  {
+    "id": 20017,
+    "title": "Life Ceremony",
+    "author": "Sayaka Murata",
+    "cover": "assets/lifeceremony.jpg",
+    "realeaseDate": 2022,
+    "genre": "Fiction",
+    "realism_value": 5,
+    "lenght": 192,
+    "country": "Japan",
+    "latitude":36.2048,
+    "longitude":138.2529,
+    "description": "Life Ceremony by Sayaka Murata is a darkly humorous novel that follows a woman’s journey to find meaning and connection in a society that values conformity and tradition, exploring themes of identity, freedom, and the search for authenticity.",
+    "readDate": "22 August - 1 September / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
+  },
+  {
+    "id": 20018,
+    "title": "Aborad in Japan",
+    "author": "Chris Broad",
+    "cover": "assets/abroadjapan.jpg",
+    "realeaseDate": 2023,
+    "genre": "NonFiction",
+    "realism_value": 10,
+    "lenght": 320,
+    "country": "UK",
+    "latitude":55.3781,
+    "longitude":-3.4360,
+    "description": "Abroad in Japan by Chris Broad is a humorous and insightful travel memoir that chronicles the author’s experiences living and working in Japan, offering a unique perspective on the country’s culture, customs, and quirks.",
+    "readDate": "1 February - 20 February / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",  
+      "andre": ""
+    }
+  },
+  {
+    "id": 20019,
+    "title": "National Dish",
+    "author": "Anya von Bremzen",
+    "cover": "assets/nationaldish.jpg",
+    "realeaseDate": 2023,
+    "genre": "NonFiction",
+    "realism_value": 10,
+    "lenght": 352,
+    "country": "Russia",
+    "latitude":61.5240,
+    "longitude":105.3188,
+    "description": "National Dish by Anya von Bremzen is a culinary journey through the history and culture of Russia, exploring the country’s iconic dishes and the stories behind them, from borscht to blini, and the role of food in shaping Russian identity.",
+    "readDate": "1 April- 30 April / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
   }
 
 
