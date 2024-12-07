@@ -198,7 +198,48 @@
       "henry": "",
       "andre": ""
     }
+  },
+  {
+    "id": 20011,
+    "title": "Hail Mary",
+    "author": "Andy Weir",
+    "cover": "assets/hailmary.jpg",
+    "realeaseDate": 2021,
+    "genre": "ScienceFiction",
+    "realism_value": 4,
+    "lenght": 496,
+    "country": "USA",
+    "latitude":38.7946,
+    "longitude":-106.5348,
+    "description": "Hail Mary by Andy Weir is a gripping science fiction novel that follows astronaut Ryland Grace’s mission to save humanity from extinction by traveling to a distant star system to retrieve a mysterious alien technology, blending hard science with thrilling adventure.",
+    "readDate": "11 September - 1 October / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
+  },
+  {
+    "id": 20012,
+    "title": "Piranesi",
+    "author": "Susanna Clarke",
+    "cover": "assets/piranesi.jpg",
+    "realeaseDate": 2020,
+    "genre": "Fiction",
+    "realism_value": 2,
+    "lenght": 272,
+    "country": "UK",
+    "latitude":55.3781,
+    "longitude":-3.4360,
+    "description": "Piranesi by Susanna Clarke is a mesmerizing novel that immerses readers in a labyrinthine world of statues, tides, and endless halls, following the eponymous character’s exploration of his surreal environment and the mysteries it holds.",
+    "readDate": "10 October - 23 October / 2024",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
   }
+
 
 ]
 
