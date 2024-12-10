@@ -13,6 +13,11 @@ function fetchAndDisplayBooks(jsonFile) {
     .then(data => {
       const grid = document.getElementById('bookGrid');
       grid.innerHTML = ''; // Clear the grid
+
+      // Sort the books by ID in descending order
+      data.sort((a, b) => b.id - a.id);
+
+      // Populate the grid with sorted books
       data.forEach(book => {
         const bookDiv = document.createElement('div');
         bookDiv.innerHTML = `
@@ -25,7 +30,6 @@ function fetchAndDisplayBooks(jsonFile) {
     })
     .catch(err => console.error(`Error fetching data from ${jsonFile}:`, err));
 }
-
 // Load books from the correct source
 fetchAndDisplayBooks(source);
 
