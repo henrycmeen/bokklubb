@@ -34,11 +34,12 @@
 <body>
   <a href="index.html" class="index-button" style="position: absolute; top: 10px; left: 10px; font-size: 24px; color: white; text-decoration: none;">-</a>
   <div class="vertical-text" onclick="animatePage(event)">MUSERNES BOKKLUBB - 2024</div>
-  <div class="chart-controls" style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%); z-index: 10; text-align: center;">
+  <div class="chart-controls" style="position: absolute; top: 5%; left: 50%; transform: translate(-50%, -50%); z-index: 10; text-align: center;">
     <label for="chartSelector" style="font-size: 20px; color: white; margin-right: 5px; font-weight: bold;"></label>
     <select id="chartSelector" style="font-size: 20px; color: white; font-weight: bold; background: none; border: none; appearance: none; outline: none; cursor: pointer;">
       <option value="howRealisIt" selected>How real is it?</option>
       <option value="whereDoTheyWrite">Where do they write?</option>
+      <option value="authorBookAge">How old are they?</option>
     </select>
   </div>
   <div class="chart-container">
@@ -86,6 +87,10 @@ const chartConfigs = {
         xAxis: 'longitude', 
         yAxis: 'latitude',
         rAxis: 'lenght',
+    },
+    authorBookAge: {
+      // We'll handle the calculations in the fetch block,
+      // so these keys won't be used in the same way as the others.
     }
 };
 
@@ -111,7 +116,126 @@ function fetchAndRenderChart(chartType) {
             const minR = Math.min(...rValues);
             const maxR = Math.max(...rValues);
 
-            // Transform data for Chart.js and assign colors based on genre
+            // ADDED: If the chartType is 'authorBookAge', we will compute differently
+            if (chartType === 'authorBookAge') {
+                // We assume `author_birthyear` is present in each book's data.
+                // Calculate authorAgeAtRelease and bookAgeAtReading
+
+                const dataPoints = [];
+
+                books.forEach(book => {
+                    const yearMatches = book.readDate.match(/\d{4}/g);
+                    const readYear = yearMatches ? parseInt(yearMatches[yearMatches.length - 1], 10) : null;
+
+                    if (book.author_birthyear && book.realeaseDate && readYear) {
+                        const authorAgeAtRelease = book.realeaseDate - book.author_birthyear;
+                        const bookAgeAtReading = readYear - book.realeaseDate;
+
+                        // Normalize bubble size based on book length
+                        const lengths = books.map(b => b.lenght);
+                        const minLen = Math.min(...lengths);
+                        const maxLen = Math.max(...lengths);
+                        const rValue = normalize(book.lenght, minLen, maxLen, 5, 12);
+
+                        dataPoints.push({
+                            x: authorAgeAtRelease,    // Author age at release
+                            y: bookAgeAtReading,      // Book age at reading
+                            r: rValue,                
+                            name: book.title,
+                            country: book.country || "Unknown",
+                            borderColor: 'white',
+                            borderWidth: 0.3,
+                            genre: book.genre,
+                            backgroundColor: genreColorMap[book.genre] || defaultColor
+                        });
+                    }
+                });
+
+
+                //Group by country for legend display
+                const legendGroups = {};
+                dataPoints.forEach((point) => {
+                    const country = point.country || "Unknown";
+                    if (!legendGroups[country]) {
+                        legendGroups[country] = [];
+                    }
+                    legendGroups[country].push(point);
+                });
+
+                //Create datasets from legendGroups
+                const datasets = Object.keys(legendGroups).map((group) => {
+                    return {
+                        label: group,
+                        data: legendGroups[group],
+                        backgroundColor: legendGroups[group][0].backgroundColor,
+                        borderColor: "white",
+                        borderWidth: 0.3
+                    };
+                });
+
+                const data = { datasets };
+
+                const chartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                color: 'white',
+                                font: {
+                                    size: 10,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        // Use config.title if defined for authorBookAge, or provide a fallback
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const dataPoint = context.raw;
+                                    return `${dataPoint.name}: Author Age=${dataPoint.x}, Book Age=${dataPoint.y}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Author Age at Release (Years)',
+                                color: 'white',
+                                font: { weight: 'bold', size: 22 }
+                            },
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Book Age at Reading (Years)',
+                                color: 'white',
+                                font: { weight: 'bold', size: 22 }
+                            },
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                        }
+                    }
+                };
+
+                if (currentChart) {
+                    currentChart.destroy();
+                }
+
+                const ctx = document.getElementById('bubbleChart').getContext('2d');
+                currentChart = new Chart(ctx, { type: 'bubble', data, options: chartOptions });
+                return; // ADDED: return here to skip the rest of the code for other chart types
+            }
+
+            // Transform data for Chart.js and assign colors based on genre (existing code)
             const chartData = books.map(book => ({
                 x: parseInt(book[config.xAxis], 10),
                 y: +book[config.yAxis],
@@ -129,20 +253,20 @@ function fetchAndRenderChart(chartType) {
             if (chartType === 'whereDoTheyWrite') {
                 // Group data points by country for "Where do they write?"
                 chartData.forEach((point) => {
-                    const country = point.country || "Unknown"; // Fallback to "Unknown" for missing countries
+                    const country = point.country || "Unknown"; 
                     if (!legendGroups[country]) {
-                        legendGroups[country] = []; // Create a new array for this country
+                        legendGroups[country] = []; 
                     }
-                    legendGroups[country].push(point); // Add the data point to the country group
+                    legendGroups[country].push(point); 
                 });
             } else {
                 // Group data points by genre for "how real is it?"
                 chartData.forEach((point) => {
-                    const genre = point.genre || "Unknown"; // Fallback to "Unknown" for missing genres
+                    const genre = point.genre || "Unknown"; 
                     if (!legendGroups[genre]) {
-                        legendGroups[genre] = []; // Create a new array for this genre
+                        legendGroups[genre] = []; 
                     }
-                    legendGroups[genre].push(point); // Add the data point to the genre group
+                    legendGroups[genre].push(point); 
                 });
             }
 
@@ -153,116 +277,115 @@ function fetchAndRenderChart(chartType) {
                     : genreColorMap[group] || defaultColor;
 
                 return {
-                    label: group, // Use the country or genre as the legend label
-                    data: legendGroups[group], // Data points for this group
-                    backgroundColor: color, // Dynamically assign color for countries or use genre color
-                    borderColor: "white", // Set bubble border color
-                    borderWidth: 0.3 // Set bubble border width
-
+                    label: group,
+                    data: legendGroups[group],
+                    backgroundColor: color,
+                    borderColor: "white",
+                    borderWidth: 0.3
                 };
             });
 
             const data = { datasets };
 
             const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: {
-            position: 'top', // Keep the legend at the top
-            labels: {
-                usePointStyle: true, // Use a custom point style for legend markers
-                pointStyle: 'circle', // Set the point style to a circle
-                color: 'white', // Set the legend text color to white
-                font: {
-                    size: 10, // Adjust font size
-                    weight: 'bold' // Make font bold
-                }
-            }
-        },
-        title: {
-            display: true,
-            text: config.title,
-            color: 'white',
-            font: {
-                size: 16,
-                weight: 'bold'
-            }
-        },
-        tooltip: {
-            callbacks: {
-                label: function (context) {
-                    const dataPoint = context.raw;
-                    return `${dataPoint.name}`;
-                }
-            }
-        }
-    },
-    scales: chartType === 'whereDoTheyWrite'
-    ? {
-        x: {
-            title: {
-                display: true,
-                text: 'Longitude',
-                color: 'white',
-                font: { weight: 'bold', size: 22 }
-            },
-            min: -180,
-            max: 180,
-            ticks: {
-                color: 'white',
-                callback: value => value.toFixed(2)
-            },
-            grid: { color: 'rgba(200, 200, 200, 0.2)' }
-        },
-        y: {
-            title: {
-                display: true,
-                text: 'Latitude',
-                color: 'white',
-                font: { weight: 'bold', size: 22 }
-            },
-            min: -90,
-            max: 90,
-            ticks: {
-                color: 'white',
-                callback: value => value.toFixed(2)
-            },
-            grid: { color: 'rgba(200, 200, 200, 0.2)' }
-        }
-    }
-    : {
-        x: {
-            title: {
-                display: true,
-                text: 'Release Year', // Adjusted text for clarity
-                color: 'white',
-                font: { weight: 'bold', size: 22 }
-            },
-            min: minX - 10, // Add padding to the minimum x-axis value
-            max: maxX + 10, // Add padding to the maximum x-axis value
-            ticks: {
-                color: 'white',
-                callback: value => value.toString().replace(/,/g, '') // Remove commas from year
-            },
-            grid: { color: 'rgba(200, 200, 200, 0.2)' }
-        },
-        y: {
-            title: {
-                display: true,
-                text: 'Realism', // Adjusted text for clarity
-                color: 'white',
-                font: { weight: 'bold', size: 22 }
-            },
-            min: minY - 1, // Add padding to the minimum y-axis value
-            max: maxY + 1, // Add padding to the maximum y-axis value
-            ticks: {
-                color: 'white'
-            },
-            grid: { color: 'rgba(200, 200, 200, 0.2)' }
-        }
-    }
-};
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            color: 'white',
+                            font: {
+                                size: 10,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: config.title,
+                        color: 'white',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const dataPoint = context.raw;
+                                return `${dataPoint.name}`;
+                            }
+                        }
+                    }
+                },
+                scales: chartType === 'whereDoTheyWrite'
+                    ? {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Longitude',
+                                color: 'white',
+                                font: { weight: 'bold', size: 22 }
+                            },
+                            min: -180,
+                            max: 180,
+                            ticks: {
+                                color: 'white',
+                                callback: value => value.toFixed(2)
+                            },
+                            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Latitude',
+                                color: 'white',
+                                font: { weight: 'bold', size: 22 }
+                            },
+                            min: -90,
+                            max: 90,
+                            ticks: {
+                                color: 'white',
+                                callback: value => value.toFixed(2)
+                            },
+                            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                        }
+                    }
+                    : {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Release Year', // Adjusted text for clarity
+                                color: 'white',
+                                font: { weight: 'bold', size: 22 }
+                            },
+                            min: minX - 10,
+                            max: maxX + 10,
+                            ticks: {
+                                color: 'white',
+                                callback: value => value.toString().replace(/,/g, '')
+                            },
+                            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Realism', // Adjusted text for clarity
+                                color: 'white',
+                                font: { weight: 'bold', size: 22 }
+                            },
+                            min: minY - 1,
+                            max: maxY + 1,
+                            ticks: {
+                                color: 'white'
+                            },
+                            grid: { color: 'rgba(200, 200, 200, 0.2)' }
+                        }
+                    }
+            };
 
             if (currentChart) {
                 currentChart.destroy(); // Destroy the existing chart
