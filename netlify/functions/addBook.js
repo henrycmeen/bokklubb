@@ -52,8 +52,8 @@ exports.handler = async function (event, context) {
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
   // This is the environment variable set in Netlify.
 
-  const owner = 'YourGitHubUsername';
-  const repo = 'YourRepoName';
+  const owner = 'RasmusKoRiis';
+  const repo = 'book';
   const branch = 'main'; // or whichever branch
 
   // Helpers -------------------------
