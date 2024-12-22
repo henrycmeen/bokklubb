@@ -33,6 +33,18 @@ function fetchAndDisplayBooks(jsonFile) {
 // Load books from the correct source
 fetchAndDisplayBooks(source);
 
+const showAddBookFormBtn = document.getElementById('showAddBookFormBtn');
+const addBookForm = document.getElementById('addBookForm');
+const cancelAddBookBtn = document.getElementById('cancelAddBookBtn');
+
+showAddBookFormBtn.addEventListener('click', () => {
+  addBookForm.style.display = 'block';
+});
+
+cancelAddBookBtn.addEventListener('click', () => {
+  addBookForm.style.display = 'none';
+});
+
 // Add event listeners for the sidebar buttons
 document.getElementById('rasmusButton').addEventListener('click', () => {
   window.location.href = `index.html?source=rasmus.json`;
@@ -49,3 +61,4 @@ document.getElementById('andreButton').addEventListener('click', () => {
 document.getElementById('backButton').addEventListener('click', () => {
   window.location.href = `index.html?source=books.json`;
 });
+

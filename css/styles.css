@@ -136,6 +136,11 @@ body.detail-page {
   pointer-events: none; /* Ensure the vertical text doesn't block clicks */
 }
 
+
+#addBookForm {
+  width: 300px;
+}
+
 /* Overlay Base */
 .overlay {
   position: fixed;

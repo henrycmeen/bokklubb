@@ -8,10 +8,13 @@
 </head>
 <body class="index-page">
   <header>
-    <a href="chart.html?source=books.json" class="chart-button" style="position: absolute; top: 10px; left: 10px; font-size: 24px; color: black; text-decoration: none;">+</a>    <a href="#" id="rasmusButton" class="chart-button" style="position: absolute; top: 125px; left: 10px; font-size: 24px; color: black; text-decoration: none;">R</a>
+    <a href="chart.html?source=books.json" class="chart-button" style="position: absolute; top: 10px; left: 10px; font-size: 24px; color: black; text-decoration: none;">*</a>    <a href="#" id="rasmusButton" class="chart-button" style="position: absolute; top: 125px; left: 10px; font-size: 24px; color: black; text-decoration: none;">R</a>
     <a href="#" id="henryButton" class="chart-button" style="position: absolute; top: 45px; left: 10px; font-size: 24px; color: black; text-decoration: none;">H</a>
     <a href="#" id="andreButton" class="chart-button" style="position: absolute; top: 85px; left: 10px; font-size: 24px; color: black; text-decoration: none;">A</a>
     <a href="#" id="backButton" class="chart-button" style="position: absolute; top: 160px; left: 10px; font-size: 24px; color: black; text-decoration: none;">&lt;</a>
+    <button id="showAddBookFormBtn" style="position: absolute; top: 200px; left: 10px; font-size: 24px; color: black; text-decoration: none; border: none; background: none; padding: 0; cursor: pointer;">
+      +
+    </button>
     </header>
   <main>
     <div class="grid" id="bookGrid"></div>
@@ -19,60 +22,139 @@
     <div class="vertical-text" onclick="animatePage(event)">MUSERNES BOKKLUBB - 2024</div>
     <!-- Overlay for the Animation -->
     <div class="overlay" id="overlay"></div>
+    <div id="addBookForm" style="display: none; position: fixed; top: 20%; left: 20%; 
+                              background: white; color: black; padding: 20px; 
+                              border: 2px solid #333; z-index: 9999;">
+    <h2>Add a New Book</h2>
+    
+    <label for="bookTitle">Title:</label><br>
+    <input type="text" id="bookTitle" name="bookTitle" /><br><br>
+
+    <label for="bookAuthor">Author:</label><br>
+    <input type="text" id="bookAuthor" name="bookAuthor" /><br><br>
+
+    <label for="bookDescription">Description:</label><br>
+    <textarea id="bookDescription" name="bookDescription"></textarea><br><br>
+
+    <label for="readDate">Read Date:</label><br>
+    <input type="text" id="readDate" name="readDate" placeholder="e.g., January 2024" /><br><br>
+
+    <label for="quoteRasmus">Quote from Rasmus:</label><br>
+    <input type="text" id="quoteRasmus" name="quoteRasmus" /><br><br>
+
+    <label for="quoteHenry">Quote from Henry:</label><br>
+    <input type="text" id="quoteHenry" name="quoteHenry" /><br><br>
+
+    <label for="quoteAndre">Quote from André:</label><br>
+    <input type="text" id="quoteAndre" name="quoteAndre" /><br><br>
+
+    <label for="coverFile">Book Cover Image:</label><br>
+    <input type="file" id="coverFile" name="coverFile" accept="image/*"><br><br>
+
+    <button id="addBookBtn">Submit</button>
+    <button id="cancelAddBookBtn">Cancel</button>
+  </div>
   </main>
   <script src="js/app.js"></script>
   <script>
-    function animatePage(event) {
-      const overlay = document.getElementById('overlay');
+    const showAddBookFormBtn = document.getElementById('showAddBookFormBtn');
+    const addBookForm = document.getElementById('addBookForm');
+    const cancelAddBookBtn = document.getElementById('cancelAddBookBtn');
+    const addBookBtn = document.getElementById('addBookBtn');
   
-      // Ensure the overlay starts clean
-      overlay.classList.remove('white'); // Remove any residual white background
-      overlay.innerHTML = ''; // Clear any previous content
+    // Show the form when user clicks "Add Book"
+    showAddBookFormBtn.addEventListener('click', () => {
+      addBookForm.style.display = 'block';
+    });
   
-      // Phase 1: Flowing energy animation
-      for (let i = 0; i < 3; i++) {
-        const flow = document.createElement('div');
-        flow.classList.add('flow');
-        overlay.appendChild(flow);
+    // Hide the form on "Cancel"
+    cancelAddBookBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      addBookForm.style.display = 'none';
+    });
+  
+    // On "Submit", gather data and POST to Netlify Function
+    addBookBtn.addEventListener('click', async (e) => {
+      e.preventDefault(); // Stop default form submission
+  
+      // 1) Get text fields
+      const title = document.getElementById('bookTitle').value;
+      const author = document.getElementById('bookAuthor').value;
+      const description = document.getElementById('bookDescription').value;
+      const readDate = document.getElementById('readDate').value;
+      const quoteRasmus = document.getElementById('quoteRasmus').value;
+      const quoteHenry = document.getElementById('quoteHenry').value;
+      const quoteAndre = document.getElementById('quoteAndre').value;
+  
+      // 2) Get file from <input type="file">
+      const fileInput = document.getElementById('coverFile');
+      if (!fileInput.files[0]) {
+        alert('Please select a cover image file.');
+        return;
       }
+      const coverFile = fileInput.files[0];
   
-      // Activate the overlay for Phase 1
-      overlay.classList.add('active');
+      // 3) Convert the file to a Base64 string
+      const coverFileBase64 = await fileToBase64(coverFile);
   
-      // Transition to Phase 2 (worms) after Phase 1
-      setTimeout(() => {
-        overlay.innerHTML = ''; // Clear flows
-        overlay.style.background = 'black'; // Ensure black background
+      // 4) Build the JSON to send
+      const payload = {
+        title,
+        author,
+        description,
+        readDate,
+        quoteRasmus,
+        quoteHenry,
+        quoteAndre,
+        coverFileBase64,         // The raw base64 data (without the prefix)
+        coverFileName: coverFile.name // Original file name or something else
+      };
   
-        // Phase 2: Add organic worms
-        for (let i = 0; i < 30; i++) {
-          const worm = document.createElement('div');
-          worm.classList.add('worm');
+      // 5) Send a POST request to our Netlify Function
+      try {
+        // The endpoint is "/.netlify/functions/addBook" 
+        // because we named our file "addBook.js"
+        const response = await fetch('/.netlify/functions/addBook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
   
-          // Randomize worm start positions
-          worm.style.top = `${Math.random() * 100}vh`;
-          worm.style.left = `${Math.random() * 100}vw`;
-  
-          // Append worm to overlay
-          overlay.appendChild(worm);
+        if (!response.ok) {
+          // e.g. 500, 400, 405
+          throw new Error(`Server responded with status ${response.status}`);
         }
-      }, 15000); // Transition to worms after 15 seconds
   
-      // Explosion Finale: Turn the screen white
-      setTimeout(() => {
-        overlay.classList.add('white');
-      }, 35000); // Trigger explosion at 35 seconds
+        const result = await response.json();
+        if (result.success) {
+          alert('Book added successfully!');
+          // Hide the form
+          addBookForm.style.display = 'none';
+          // Optionally refresh your page or re-fetch data
+        } else {
+          alert('Failed to add book: ' + result.message);
+        }
   
-      // Clean up and redirect after the animation
-      setTimeout(() => {
-        overlay.innerHTML = ''; // Clear everything
-        window.location.href = 'index.html'; // Redirect
-      }, 37000); // Total duration 37 seconds
+      } catch (err) {
+        console.error('Error adding book:', err);
+        alert('Error adding book: ' + err.message);
+      }
+    });
+  
+    // Helper function to read the file as Base64
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          // reader.result = 'data:image/png;base64,iVBORw0KGgo...'
+          // We want just the Base64 part
+          const base64Data = reader.result.split(',')[1];
+          resolve(base64Data);
+        };
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+      });
     }
-  
-    // Add event listeners for both click and touch
-    document.querySelector('.vertical-text').addEventListener('click', animatePage);
-    document.querySelector('.vertical-text').addEventListener('touchstart', animatePage);
   </script>
 </body>
 </html>
