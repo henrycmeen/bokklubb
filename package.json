@@ -2,9 +2,9 @@
     "name": "my-netlify-site",
     "version": "1.0.0",
     "scripts": {
-      "build": "echo 'No build step' && exit 0"
+        "build": "echo 'No build step' && exit 0"
     },
     "dependencies": {
-      "node-fetch": "^3.3.1"
+        "node-fetch": "^2.7.0"
     }
-  }
+}
