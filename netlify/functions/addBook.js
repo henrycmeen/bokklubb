@@ -28,8 +28,9 @@ exports.handler = async function (event, context) {
     };
   }
 
-  // Extract data
+  // *** Extract the submitted password plus your other fields ***
   const {
+    secretPassword,
     title,
     author,
     description,
@@ -40,6 +41,18 @@ exports.handler = async function (event, context) {
     coverFileBase64,
     coverFileName
   } = bodyData;
+
+  // *** Compare secretPassword to our server-side env var ***
+  if (secretPassword !== process.env.ADMIN_PASSWORD) {
+    console.error("Unauthorized: incorrect password");
+    return {
+      statusCode: 401,
+      body: JSON.stringify({
+        success: false,
+        message: 'Unauthorized: incorrect password'
+      })
+    };
+  }
 
   // 3. Validate minimum fields
   if (!title || !author || !coverFileBase64 || !coverFileName) {
@@ -68,7 +81,6 @@ exports.handler = async function (event, context) {
 
   // Helpers -------------------------
 
-  // Fetch books.json to get current list + the SHA needed to update
   async function getBooksJson() {
     console.log("Fetching books.json from GitHub...");
     const res = await fetch(
@@ -90,7 +102,6 @@ exports.handler = async function (event, context) {
     const data = await res.json();
     console.log("books.json fetch success:", data);
 
-    // data.content is base64-encoded
     const decoded = Buffer.from(data.content, 'base64').toString();
     const books = JSON.parse(decoded);
     console.log("Parsed existing books:", books);
@@ -98,10 +109,8 @@ exports.handler = async function (event, context) {
     return { books, sha: data.sha };
   }
 
-  // Update books.json with new array
   async function updateBooksJson(updatedBooks, fileSha) {
     console.log("Updating books.json with new books array...");
-    // Convert updatedBooks to base64
     const newContent = Buffer.from(JSON.stringify(updatedBooks, null, 2)).toString('base64');
 
     const putRes = await fetch(
@@ -115,7 +124,7 @@ exports.handler = async function (event, context) {
         body: JSON.stringify({
           message: `Add new book: ${title}`,
           content: newContent,
-          sha: fileSha, // Required: the old SHA
+          sha: fileSha,
           branch
         })
       }
@@ -133,7 +142,6 @@ exports.handler = async function (event, context) {
     return json;
   }
 
-  // Upload cover image to assets/ (unique name using timestamp)
   async function uploadCoverImage(base64File, fileName) {
     console.log(`Uploading cover image: ${fileName} ...`);
     const filePath = `assets/${Date.now()}-${fileName}`;
@@ -169,7 +177,7 @@ exports.handler = async function (event, context) {
     };
   }
 
-  // Try to do everything: upload cover & update books.json
+  // Main logic inside try/catch
   try {
     console.log("1) Uploading the cover file...");
     const { coverUrl } = await uploadCoverImage(coverFileBase64, coverFileName);

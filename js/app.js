@@ -72,7 +72,10 @@ addBookBtn.addEventListener('click', async (e) => {
   // Convert the file to Base64 using our helper
   const coverFileBase64 = await fileToBase64(coverFile);
 
-  // Construct the payload to send to the Netlify Function
+  // 1) Grab the password from the input field
+  const adminPassword = document.getElementById('adminPassword').value;
+
+  // 2) Add it to your payload
   const payload = {
     title,
     author,
@@ -81,8 +84,9 @@ addBookBtn.addEventListener('click', async (e) => {
     quoteRasmus,
     quoteHenry,
     quoteAndre,
-    coverFileBase64,             // Base64 content
-    coverFileName: coverFile.name // e.g. "mycover.jpg"
+    coverFileBase64,
+    coverFileName: coverFile.name,
+    secretPassword: adminPassword // << important
   };
 
   // Make the POST request to your serverless function
