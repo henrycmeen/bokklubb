@@ -1,12 +1,13 @@
 // netlify/functions/addBook.js
 
-const fetch = require('node-fetch'); 
-// If on newer Node versions on Netlify, fetch might be built-in, 
-// but "node-fetch" is guaranteed to work in most environments.
+const fetch = require('node-fetch');
 
 exports.handler = async function (event, context) {
+  console.log("=== addBook function invoked ===");
+
   // 1. Only allow POST requests
   if (event.httpMethod !== 'POST') {
+    console.error("Method not allowed: Received", event.httpMethod);
     return {
       statusCode: 405,
       body: JSON.stringify({ message: 'Method Not Allowed, use POST.' })
@@ -14,18 +15,20 @@ exports.handler = async function (event, context) {
   }
 
   // 2. Parse the incoming POST body
-  //    We expect JSON with fields: title, author, coverFileBase64, coverFileName, etc.
   let bodyData;
   try {
+    console.log("Parsing request body...");
     bodyData = JSON.parse(event.body);
+    console.log("Parsed body:", bodyData);
   } catch (err) {
+    console.error("JSON parse error:", err);
     return {
       statusCode: 400,
       body: JSON.stringify({ message: 'Invalid JSON in request body' })
     };
   }
 
-  // Extract data from the parsed body
+  // Extract data
   const {
     title,
     author,
@@ -40,107 +43,141 @@ exports.handler = async function (event, context) {
 
   // 3. Validate minimum fields
   if (!title || !author || !coverFileBase64 || !coverFileName) {
+    console.error("Missing required fields:", {
+      title,
+      author,
+      coverFileBase64: Boolean(coverFileBase64),
+      coverFileName
+    });
     return {
       statusCode: 400,
-      body: JSON.stringify({ 
-        message: 'Missing required fields: title, author, coverFileBase64, coverFileName' 
+      body: JSON.stringify({
+        message: 'Missing required fields: title, author, coverFileBase64, coverFileName'
       })
     };
   }
 
   // 4. Prepare GitHub variables
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
-  // This is the environment variable set in Netlify.
-
+  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const owner = 'RasmusKoRiis';
   const repo = 'book';
-  const branch = 'main'; // or whichever branch
+  const branch = 'main';
+
+  console.log("GITHUB_TOKEN present?", !!GITHUB_TOKEN);
+  console.log("owner:", owner, "repo:", repo, "branch:", branch);
 
   // Helpers -------------------------
 
   // Fetch books.json to get current list + the SHA needed to update
   async function getBooksJson() {
-    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/books.json`, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`
+    console.log("Fetching books.json from GitHub...");
+    const res = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/books.json`,
+      {
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`
+        }
       }
-    });
+    );
+    console.log("books.json fetch status:", res.status);
+
     if (!res.ok) {
-      throw new Error('Failed to fetch books.json from GitHub');
+      const text = await res.text();
+      console.error("Failed to fetch books.json. Response text:", text);
+      throw new Error(`Failed to fetch books.json from GitHub (status ${res.status})`);
     }
+
     const data = await res.json();
+    console.log("books.json fetch success:", data);
 
     // data.content is base64-encoded
     const decoded = Buffer.from(data.content, 'base64').toString();
     const books = JSON.parse(decoded);
+    console.log("Parsed existing books:", books);
 
     return { books, sha: data.sha };
   }
 
   // Update books.json with new array
   async function updateBooksJson(updatedBooks, fileSha) {
+    console.log("Updating books.json with new books array...");
     // Convert updatedBooks to base64
     const newContent = Buffer.from(JSON.stringify(updatedBooks, null, 2)).toString('base64');
 
-    const putRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/books.json`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: `Add new book: ${title}`,
-        content: newContent,
-        sha: fileSha,       // Required: the old SHA
-        branch
-      })
-    });
+    const putRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/books.json`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: `Add new book: ${title}`,
+          content: newContent,
+          sha: fileSha, // Required: the old SHA
+          branch
+        })
+      }
+    );
+    console.log("PUT /books.json status:", putRes.status);
 
     if (!putRes.ok) {
-      throw new Error('Failed to update books.json on GitHub');
+      const errText = await putRes.text();
+      console.error("Failed to update books.json:", errText);
+      throw new Error(`Failed to update books.json on GitHub (status ${putRes.status})`);
     }
 
-    return putRes.json();
+    const json = await putRes.json();
+    console.log("books.json update success:", json);
+    return json;
   }
 
   // Upload cover image to assets/ (unique name using timestamp)
   async function uploadCoverImage(base64File, fileName) {
-    const filePath = `assets/${Date.now()}-${fileName}`; 
-    // e.g., assets/16754266342-bookCover.jpg
+    console.log(`Uploading cover image: ${fileName} ...`);
+    const filePath = `assets/${Date.now()}-${fileName}`;
 
-    const uploadRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: `Add cover image: ${fileName}`,
-        content: base64File, // the base64 string of the image
-        branch
-      })
-    });
+    const uploadRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: `Add cover image: ${fileName}`,
+          content: base64File,
+          branch
+        })
+      }
+    );
+    console.log("PUT /assets/ status:", uploadRes.status);
 
     if (!uploadRes.ok) {
-      throw new Error('Failed to upload cover image to GitHub');
+      const uploadErrText = await uploadRes.text();
+      console.error("Failed to upload cover image:", uploadErrText);
+      throw new Error(`Failed to upload cover image to GitHub (status ${uploadRes.status})`);
     }
 
     const uploadData = await uploadRes.json();
+    console.log("Cover image upload success:", uploadData);
+
     return {
-      // Construct raw URL to the newly uploaded image
       coverUrl: `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${uploadData.content.path}`
     };
   }
 
-  // Try to do everything: upload the cover & update books.json
+  // Try to do everything: upload cover & update books.json
   try {
-    // 1) Upload the cover file
+    console.log("1) Uploading the cover file...");
     const { coverUrl } = await uploadCoverImage(coverFileBase64, coverFileName);
 
-    // 2) Get current books.json
+    console.log("2) Fetching current books.json...");
     const { books, sha } = await getBooksJson();
 
-    // 3) Create new book object
+    console.log("3) Create new book object");
     const newBook = {
       title,
       author,
@@ -151,24 +188,24 @@ exports.handler = async function (event, context) {
       quoteAndre,
       cover: coverUrl
     };
+    console.log("New book:", newBook);
 
-    // 4) Append to the existing books array
+    console.log("4) Append to existing books...");
     books.push(newBook);
 
-    // 5) Update books.json (commit the new array)
+    console.log("5) Update books.json (commit)...");
     await updateBooksJson(books, sha);
 
-    // 6) Return success
+    console.log("6) Return success. Done!");
     return {
       statusCode: 200,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         success: true,
         message: 'Book added successfully!',
-        coverUrl 
+        coverUrl
       })
     };
   } catch (error) {
-    // Catch any errors and report them
     console.error('Error in addBook function:', error);
     return {
       statusCode: 500,
