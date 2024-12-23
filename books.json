@@ -40,15 +40,5 @@
       "henry": "",
       "andre": ""
     }
-  },
-  {
-    "title": "Test",
-    "author": "Test",
-    "description": "Test",
-    "readDate": "test",
-    "quoteRasmus": "Test",
-    "quoteHenry": "Test",
-    "quoteAndre": "fsd",
-    "cover": "https://raw.githubusercontent.com/RasmusKoRiis/book/main/assets/1734971799083-threebody.jpg"
   }
 ]
