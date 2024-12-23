@@ -22,43 +22,44 @@
     <div class="vertical-text" onclick="animatePage(event)">MUSERNES BOKKLUBB - 2024</div>
     <!-- Overlay for the Animation -->
     <div class="overlay" id="overlay"></div>
-    <div id="addBookForm" style="display: none; position: fixed; top: 20%; left: 20%; 
-                              background: white; color: black; padding: 20px; 
-                              border: 2px solid #333; z-index: 9999;">
-
-    <h2>Add a New Book</h2>
+    <div id="addBookFormContainer" style="display: none;">
+      <div id="addBookForm">
+        <h2>Add a New Book</h2>
+          
+        <label for="bookTitle">Title:</label>
+        <input type="text" id="bookTitle" name="bookTitle" />
     
-    <label for="bookTitle">Title:</label><br>
-    <input type="text" id="bookTitle" name="bookTitle" /><br><br>
-
-    <label for="bookAuthor">Author:</label><br>
-    <input type="text" id="bookAuthor" name="bookAuthor" /><br><br>
-
-    <label for="bookDescription">Description:</label><br>
-    <textarea id="bookDescription" name="bookDescription"></textarea><br><br>
-
-    <label for="readDate">Read Date:</label><br>
-    <input type="text" id="readDate" name="readDate" placeholder="e.g., January 2024" /><br><br>
-
-    <label for="quoteRasmus">Quote from Rasmus:</label><br>
-    <input type="text" id="quoteRasmus" name="quoteRasmus" /><br><br>
-
-    <label for="quoteHenry">Quote from Henry:</label><br>
-    <input type="text" id="quoteHenry" name="quoteHenry" /><br><br>
-
-    <label for="quoteAndre">Quote from André:</label><br>
-    <input type="text" id="quoteAndre" name="quoteAndre" /><br><br>
-
-    <label for="coverFile">Book Cover Image:</label><br>
-    <input type="file" id="coverFile" name="coverFile" accept="image/*"><br><br>
-
-    <label for="adminPassword">Admin Password:</label><br>
-    <input type="password" id="adminPassword" name="adminPassword" /><br><br>
+        <label for="bookAuthor">Author:</label>
+        <input type="text" id="bookAuthor" name="bookAuthor" />
     
-    <button id="addBookBtn">Submit</button>
-    <button id="cancelAddBookBtn">Cancel</button>
-  </div>
-  </main>
+        <label for="bookDescription">Description:</label>
+        <textarea id="bookDescription" name="bookDescription"></textarea>
+    
+        <label for="readDate">Read Date:</label>
+        <input type="text" id="readDate" name="readDate" placeholder="e.g., January 2024" />
+    
+        <label for="quoteRasmus">Quote from Rasmus:</label>
+        <input type="text" id="quoteRasmus" name="quoteRasmus" />
+    
+        <label for="quoteHenry">Quote from Henry:</label>
+        <input type="text" id="quoteHenry" name="quoteHenry" />
+    
+        <label for="quoteAndre">Quote from André:</label>
+        <input type="text" id="quoteAndre" name="quoteAndre" />
+    
+        <label for="coverFile">Book Cover Image:</label>
+        <input type="file" id="coverFile" name="coverFile" accept="image/*">
+    
+        <label for="adminPassword">Admin Password:</label>
+        <input type="password" id="adminPassword" name="adminPassword" />
+        
+        <!-- Buttons Container -->
+        <div class="button-container">
+          <button id="addBookBtn">Submit</button>
+          <button id="cancelAddBookBtn">Cancel</button>
+        </div>
+      </div>
+    </div>
   <script src="js/app.js"></script>
 </body>
 </html>
