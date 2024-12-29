@@ -97,6 +97,14 @@ addBookBtn.addEventListener('click', async (e) => {
   // Gather data from the input fields
   const title = document.getElementById('bookTitle').value.trim();
   const author = document.getElementById('bookAuthor').value.trim();
+  const realeaseDate = document.getElementById('realeaseDate').value.trim();
+  const author_birthyear = document.getElementById('author_birthyear').value.trim();
+  const genre = document.getElementById('genre').value.trim();
+  const realism_value = document.getElementById('realism_value').value.trim();
+  const lenght= document.getElementById('lenght').value.trim();
+  const country= document.getElementById('country').value.trim();
+  const latitude= document.getElementById('latitude').value.trim();
+  const longitude= document.getElementById('longitude').value.trim();
   const description = document.getElementById('bookDescription').value.trim();
   const readDate = document.getElementById('readDate').value.trim();
   const quoteRasmus = document.getElementById('quoteRasmus').value.trim();
@@ -134,6 +142,14 @@ addBookBtn.addEventListener('click', async (e) => {
   const payload = {
     title,
     author,
+    realeaseDate,
+    author_birthyear,
+    genre,
+    realism_value,
+    lenght,
+    country,
+    latitude,
+    longitude,
     description,
     readDate,
     quoteRasmus,
