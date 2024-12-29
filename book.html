@@ -16,12 +16,12 @@
         <h2 id="bookAuthor"></h2>
         <p id="bookDescription"></p>
         <p id="readDate"></p>
-        <button id="editButton">Edit</button>
         <div class="quotes">
           <p><strong>Rasmus:</strong> <span id="quoteRasmus"></span></p>
           <p><strong>Henry:</strong> <span id="quoteHenry"></span></p>
           <p><strong>André:</strong> <span id="quoteAndre"></span></p>
         </div>
+        <button id="editButton" onclick="event.stopPropagation()">Edit</button>
               <!-- An edit form overlay (initially hidden) -->
         <div id="editOverlay" style="display: none;">
           <div id="editForm">
