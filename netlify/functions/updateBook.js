@@ -105,8 +105,26 @@ exports.handler = async function (event) {
 
     // 3) update fields
     const bookToUpdate = booksArray[bookIndex];
+
+    // If your "updatedFields" might include quotes, handle them separately:
+    if (!bookToUpdate.quotes) {
+      bookToUpdate.quotes = { rasmus: "", henry: "", andre: "" };
+    }
+    
+    // For each updated field:
     for (const [key, value] of Object.entries(updatedFields)) {
-      bookToUpdate[key] = value;
+      // If the key starts with 'quoteRasmus', 'quoteHenry', etc., 
+      // set them inside the `quotes` object.
+      if (key === 'quoteRasmus') {
+        bookToUpdate.quotes.rasmus = value;
+      } else if (key === 'quoteHenry') {
+        bookToUpdate.quotes.henry = value;
+      } else if (key === 'quoteAndre') {
+        bookToUpdate.quotes.andre = value;
+      } else {
+        // Otherwise, update the book top-level field
+        bookToUpdate[key] = value;
+      }
     }
 
     // 4) commit updated array

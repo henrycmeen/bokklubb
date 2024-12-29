@@ -116,6 +116,8 @@ document.getElementById('submitEditBtn').addEventListener('click', async () => {
       author: updatedAuthor,
       description: updatedDescription,
       quoteRasmus: updatedQuoteRasmus,
+      quoteAndre: updatedQuoteAndre,
+      quoteHenry: updatedQuoteHenry,
       // ... any other fields ...
     },
     // Use whatever the user typed in the prompt
