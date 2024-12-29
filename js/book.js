@@ -80,6 +80,8 @@ document.getElementById('editButton').addEventListener('click', () => {
   document.getElementById('editAuthor').value = window.currentBook.author || '';
   document.getElementById('editDescription').value = window.currentBook.description || '';
   document.getElementById('editQuoteRasmus').value = window.currentBook.quoteRasmus || '';
+  document.getElementById('editQuoteAndre').value = window.currentBook.quoteAndre || '';
+  document.getElementById('editQuoteHenry').value = window.currentBook.quoteHenry || '';
 
   // ... etc for any fields you'd like to allow editing
 });
@@ -101,6 +103,8 @@ document.getElementById('submitEditBtn').addEventListener('click', async () => {
   const updatedAuthor = document.getElementById('editAuthor').value.trim();
   const updatedDescription = document.getElementById('editDescription').value.trim();
   const updatedQuoteRasmus = document.getElementById('editQuoteRasmus').value.trim();
+  const updatedQuoteAndre = document.getElementById('editQuoteAndre').value.trim();
+  const updatedQuoteHenry = document.getElementById('editQuoteHenry').value.trim();
 
   // Build payload
   const payload = {
@@ -141,6 +145,8 @@ document.getElementById('submitEditBtn').addEventListener('click', async () => {
       document.getElementById('bookAuthor').innerText = updatedAuthor;
       document.getElementById('bookDescription').innerText = updatedDescription;
       document.getElementById('quoteRasmus').innerText = updatedQuoteRasmus;
+      document.getElementById('quoteAndre').innerText = updatedQuoteAndre;
+      document.getElementById('quoteHenry').innerText = updatedQuoteHenry;
       
     } else {
       alert('Failed to update book: ' + result.message);
