@@ -28,7 +28,7 @@ exports.handler = async function (event, context) {
     };
   }
 
-  // *** Extract the submitted password plus your other fields ***
+  // *** Extract the submitted password plus other fields ***
   const {
     secretPassword,
     title,
@@ -48,7 +48,7 @@ exports.handler = async function (event, context) {
     quoteAndre,
     coverFileBase64,
     coverFileName,
-    source 
+    source
   } = bodyData;
 
   // *** Compare secretPassword to our server-side env var ***
@@ -88,15 +88,21 @@ exports.handler = async function (event, context) {
   console.log("GITHUB_TOKEN present?", !!GITHUB_TOKEN);
   console.log("owner:", owner, "repo:", repo, "branch:", branch);
 
-  // Helpers -------------------------
+  // ================================
+  //  Define fileName in main scope
+  // ================================
+  const fileName = source || 'books.json';  // <-- THIS LINE
 
-  async function getBooksJson() {
-    console.log("Fetching books.json from GitHub...");
+  //  Helpers -------------------------
 
-    const fileName = source || 'books.json';  // Fallback if somehow source is empty
+  /**
+   * 1) Fetch existing JSON from GitHub
+   */
+  async function getBooksJson(fileNameParam) {  // <-- accept fileNameParam
+    console.log(`Fetching file "${fileNameParam}" from GitHub...`);
 
     const res = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`,
+      `https://api.github.com/repos/${owner}/${repo}/contents/${fileNameParam}`,
       {
         headers: {
           Authorization: `token ${GITHUB_TOKEN}`
@@ -104,16 +110,18 @@ exports.handler = async function (event, context) {
       }
     );
 
-    console.log("books.json fetch status:", res.status);
+    console.log(`${fileNameParam} fetch status:`, res.status);
 
     if (!res.ok) {
       const text = await res.text();
-      console.error("Failed to fetch books.json. Response text:", text);
-      throw new Error(`Failed to fetch books.json from GitHub (status ${res.status})`);
+      console.error(`Failed to fetch ${fileNameParam}. Response text:`, text);
+      throw new Error(
+        `Failed to fetch ${fileNameParam} from GitHub (status ${res.status})`
+      );
     }
 
     const data = await res.json();
-    console.log("books.json fetch success:", data);
+    console.log(`${fileNameParam} fetch success:`, data);
 
     const decoded = Buffer.from(data.content, 'base64').toString();
     const books = JSON.parse(decoded);
@@ -122,12 +130,17 @@ exports.handler = async function (event, context) {
     return { books, sha: data.sha };
   }
 
-  async function updateBooksJson(updatedBooks, fileSha, fileName) {
-    console.log("Updating books.json with new books array...");
-    const newContent = Buffer.from(JSON.stringify(updatedBooks, null, 2)).toString('base64');
+  /**
+   * 2) Update (commit) the JSON file on GitHub
+   */
+  async function updateBooksJson(updatedBooks, fileSha, fileNameParam) {
+    console.log(`Updating file "${fileNameParam}" with new books array...`);
+    const newContent = Buffer.from(
+      JSON.stringify(updatedBooks, null, 2)
+    ).toString('base64');
 
     const putRes = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`,
+      `https://api.github.com/repos/${owner}/${repo}/contents/${fileNameParam}`,
       {
         method: 'PUT',
         headers: {
@@ -142,12 +155,14 @@ exports.handler = async function (event, context) {
         })
       }
     );
-    console.log("PUT /books.json status:", putRes.status);
+    console.log(`PUT /${fileNameParam} status:`, putRes.status);
 
     if (!putRes.ok) {
       const errText = await putRes.text();
-      console.error("Failed to update books.json:", errText);
-      throw new Error(`Failed to update ${fileName} (status ${putRes.status}): ${errText}`);
+      console.error(`Failed to update ${fileNameParam}:`, errText);
+      throw new Error(
+        `Failed to update ${fileNameParam} (status ${putRes.status}): ${errText}`
+      );
     }
 
     const json = await putRes.json();
@@ -155,6 +170,9 @@ exports.handler = async function (event, context) {
     return json;
   }
 
+  /**
+   * 3) Upload the cover image
+   */
   async function uploadCoverImage(base64File, fileName) {
     console.log(`Uploading cover image: ${fileName} ...`);
     const filePath = `assets/${Date.now()}-${fileName}`;
@@ -179,7 +197,9 @@ exports.handler = async function (event, context) {
     if (!uploadRes.ok) {
       const uploadErrText = await uploadRes.text();
       console.error("Failed to upload cover image:", uploadErrText);
-      throw new Error(`Failed to upload cover image to GitHub (status ${uploadRes.status})`);
+      throw new Error(
+        `Failed to upload cover image to GitHub (status ${uploadRes.status})`
+      );
     }
 
     const uploadData = await uploadRes.json();
@@ -196,6 +216,7 @@ exports.handler = async function (event, context) {
     const { coverUrl } = await uploadCoverImage(coverFileBase64, coverFileName);
 
     console.log("2) Fetching current source file:", fileName);
+    // pass fileName to getBooksJson
     const { books, sha } = await getBooksJson(fileName);
 
     console.log("3) Create new book object");
@@ -226,6 +247,7 @@ exports.handler = async function (event, context) {
     books.push(newBook);
 
     console.log("5) Update that source file (commit)...");
+    // pass fileName again
     await updateBooksJson(books, sha, fileName);
 
     console.log("6) Return success. Done!");
@@ -233,12 +255,12 @@ exports.handler = async function (event, context) {
       statusCode: 200,
       body: JSON.stringify({
         success: true,
-        message: 'Book added successfully!',
+        message: "Book added successfully!",
         coverUrl
       })
     };
   } catch (error) {
-    console.error('Error in addBook function:', error);
+    console.error("Error in addBook function:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ success: false, message: error.message })
