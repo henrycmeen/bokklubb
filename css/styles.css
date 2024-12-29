@@ -391,3 +391,89 @@ body.detail-page {
   outline: none;
   box-shadow: none;
 }
+
+#editOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  /* Solid black behind the form */
+  background-color: rgba(0,0,0,1);
+  z-index: 9999; 
+  /* No flex centering needed if the form fills the screen */
+  display: block; 
+}
+
+#editForm {
+  /* Fill the entire overlay */
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
+  /* White background, black text */
+  background-color: #fff;
+  color: #000;
+
+  /* Add scrolling if the form is long */
+  overflow-y: auto; 
+  
+  /* Some padding for content */
+  padding: 20px; 
+  margin: 0;
+  
+  /* Remove any border-radius or shadow if you want a “full-bleed” look */
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Make each label/input row on its own line with spacing */
+.form-row {
+  margin-bottom: 1rem;
+}
+
+/* Display labels on their own line, bold text, small spacing below */
+.form-row label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+}
+
+/* Inputs and textareas can fill the width */
+.form-row input,
+.form-row textarea {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* The heading for the form */
+#editForm h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+/* Buttons row with space between */
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+/* Style the buttons (optional) */
+.button-row button {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #ccc;
+  color: #000;
+  transition: background-color 0.2s;
+}
+
+.button-row button:hover {
+  background-color: #999;
+}

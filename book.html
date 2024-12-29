@@ -23,37 +23,47 @@
         </div>
         <button id="editButton" onclick="event.stopPropagation()">Edit</button>
               <!-- An edit form overlay (initially hidden) -->
-        <div id="editOverlay" style="display: none;">
-          <div id="editForm">
-            <h2>Edit Book</h2>
-            <label for="editTitle">Title:</label>
-            <input type="text" id="editTitle" />
+  <!-- An edit form overlay (initially hidden) -->
+  <div id="editOverlay" style="display: none;">
+    <div id="editForm">
+      <h2>Edit Book</h2>
+      
+      <div class="form-row">
+        <label for="editTitle">Title:</label>
+        <input type="text" id="editTitle" />
+      </div>
 
-            <label for="editAuthor">Author:</label>
-            <input type="text" id="editAuthor" />
+      <div class="form-row">
+        <label for="editAuthor">Author:</label>
+        <input type="text" id="editAuthor" />
+      </div>
 
-            <label for="editDescription">Description:</label>
-            <textarea id="editDescription"></textarea>
+      <div class="form-row">
+        <label for="editDescription">Description: </label>
+        <textarea id="editDescription" rows="7" cols="70"></textarea>
+      </div>
 
-            <!-- ... add other fields as desired (genre, quotes, etc.) -->
+      <div class="form-row">
+        <label for="editQuoteRasmus">Quote (Rasmus):</label>
+        <textarea id="editQuoteRasmus" rows="7" cols="70"></textarea>
+      </div>
 
-            <label for="editQuoteRasmus">Quote (Rasmus):</label>
-            <input type="text" id="editQuoteRasmus" />
+      <div class="form-row">
+        <label for="editQuoteAndre">Quote (André):</label>
+        <textarea id="editQuoteAndre" rows="7" cols="70"></textarea>
+      </div>
 
-            <label for="editQuoteAndre">Quote (André):</label>
-            <input type="text" id="editQuoteAndre" />
+      <div class="form-row">
+        <label for="editQuoteHenry">Quote (Henry):</label>
+        <textarea id="editQuoteHenry" rows="7" cols="70"></textarea>      </div>
 
-            <label for="editQuoteHenry">Quote (Henry):</label>
-            <input type="text" id="editQuoteHenry" />
-
-            <button id="submitEditBtn">Save</button>
-            <button id="cancelEditBtn">Cancel</button>
-          </div>
-
-
+      <div class="button-row">
+        <button id="submitEditBtn">Save</button>
+        <button id="cancelEditBtn">Cancel</button>
       </div>
     </div>
   </div>
+
   <script src="js/book.js"></script>
   <script>
     // Function to navigate back to the grid page
