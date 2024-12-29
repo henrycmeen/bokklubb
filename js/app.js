@@ -157,7 +157,8 @@ addBookBtn.addEventListener('click', async (e) => {
     quoteAndre,
     coverFileBase64,
     coverFileName: coverFile.name,
-    secretPassword: adminPassword // << important
+    secretPassword: adminPassword,
+    source 
   };
 
   // Make the POST request to your serverless function

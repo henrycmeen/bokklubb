@@ -47,7 +47,8 @@ exports.handler = async function (event, context) {
     quoteHenry,
     quoteAndre,
     coverFileBase64,
-    coverFileName
+    coverFileName,
+    source 
   } = bodyData;
 
   // *** Compare secretPassword to our server-side env var ***
@@ -91,14 +92,18 @@ exports.handler = async function (event, context) {
 
   async function getBooksJson() {
     console.log("Fetching books.json from GitHub...");
+
+    const fileName = source || 'books.json';  // Fallback if somehow source is empty
+
     const res = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/books.json`,
+      `https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`,
       {
         headers: {
           Authorization: `token ${GITHUB_TOKEN}`
         }
       }
     );
+
     console.log("books.json fetch status:", res.status);
 
     if (!res.ok) {
@@ -117,12 +122,12 @@ exports.handler = async function (event, context) {
     return { books, sha: data.sha };
   }
 
-  async function updateBooksJson(updatedBooks, fileSha) {
+  async function updateBooksJson(updatedBooks, fileSha, fileName) {
     console.log("Updating books.json with new books array...");
     const newContent = Buffer.from(JSON.stringify(updatedBooks, null, 2)).toString('base64');
 
     const putRes = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/books.json`,
+      `https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`,
       {
         method: 'PUT',
         headers: {
@@ -142,11 +147,11 @@ exports.handler = async function (event, context) {
     if (!putRes.ok) {
       const errText = await putRes.text();
       console.error("Failed to update books.json:", errText);
-      throw new Error(`Failed to update books.json on GitHub (status ${putRes.status})`);
+      throw new Error(`Failed to update ${fileName} (status ${putRes.status}): ${errText}`);
     }
 
     const json = await putRes.json();
-    console.log("books.json update success:", json);
+    console.log("Update success:", json);
     return json;
   }
 
@@ -190,8 +195,8 @@ exports.handler = async function (event, context) {
     console.log("1) Uploading the cover file...");
     const { coverUrl } = await uploadCoverImage(coverFileBase64, coverFileName);
 
-    console.log("2) Fetching current books.json...");
-    const { books, sha } = await getBooksJson();
+    console.log("2) Fetching current source file:", fileName);
+    const { books, sha } = await getBooksJson(fileName);
 
     console.log("3) Create new book object");
     const newBookId = Date.now();
@@ -220,8 +225,8 @@ exports.handler = async function (event, context) {
     console.log("4) Append to existing books...");
     books.push(newBook);
 
-    console.log("5) Update books.json (commit)...");
-    await updateBooksJson(books, sha);
+    console.log("5) Update that source file (commit)...");
+    await updateBooksJson(books, sha, fileName);
 
     console.log("6) Return success. Done!");
     return {
