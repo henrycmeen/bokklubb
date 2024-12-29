@@ -79,6 +79,7 @@ document.getElementById('editButton').addEventListener('click', () => {
   document.getElementById('editTitle').value = window.currentBook.title || '';
   document.getElementById('editAuthor').value = window.currentBook.author || '';
   document.getElementById('editDescription').value = window.currentBook.description || '';
+  document.getElementById('readDate').value = window.currentBook.readDate || '';
   document.getElementById('editQuoteRasmus').value = window.currentBook.quoteRasmus || '';
   document.getElementById('editQuoteAndre').value = window.currentBook.quoteAndre || '';
   document.getElementById('editQuoteHenry').value = window.currentBook.quoteHenry || '';
@@ -102,6 +103,7 @@ document.getElementById('submitEditBtn').addEventListener('click', async () => {
   const updatedTitle = document.getElementById('editTitle').value.trim();
   const updatedAuthor = document.getElementById('editAuthor').value.trim();
   const updatedDescription = document.getElementById('editDescription').value.trim();
+  const updatedreadDate = document.getElementById('readDate').value.trim();
   const updatedQuoteRasmus = document.getElementById('editQuoteRasmus').value.trim();
   const updatedQuoteAndre = document.getElementById('editQuoteAndre').value.trim();
   const updatedQuoteHenry = document.getElementById('editQuoteHenry').value.trim();
@@ -115,6 +117,7 @@ document.getElementById('submitEditBtn').addEventListener('click', async () => {
       title: updatedTitle,
       author: updatedAuthor,
       description: updatedDescription,
+      readDate: updatedreadDate,
       quoteRasmus: updatedQuoteRasmus,
       quoteAndre: updatedQuoteAndre,
       quoteHenry: updatedQuoteHenry,
@@ -146,6 +149,7 @@ document.getElementById('submitEditBtn').addEventListener('click', async () => {
       document.getElementById('bookTitle').innerText = updatedTitle;
       document.getElementById('bookAuthor').innerText = updatedAuthor;
       document.getElementById('bookDescription').innerText = updatedDescription;
+      document.getElementById('readDate').innerText = updatedreadDate;
       document.getElementById('quoteRasmus').innerText = updatedQuoteRasmus;
       document.getElementById('quoteAndre').innerText = updatedQuoteAndre;
       document.getElementById('quoteHenry').innerText = updatedQuoteHenry;
