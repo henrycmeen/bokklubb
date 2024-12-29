@@ -186,9 +186,20 @@ exports.handler = async function (event, context) {
     const { books, sha } = await getBooksJson();
 
     console.log("3) Create new book object");
+    const newBookId = Date.now();
+
     const newBook = {
+      id: newBookId,
       title,
       author,
+      realeaseDate,
+      author_birthyear,
+      genre,
+      realism_value,
+      lenght,
+      country,
+      latitude,
+      longitude,
       description,
       readDate,
       quoteRasmus,
