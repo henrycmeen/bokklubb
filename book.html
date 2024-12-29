@@ -16,11 +16,35 @@
         <h2 id="bookAuthor"></h2>
         <p id="bookDescription"></p>
         <p id="readDate"></p>
+        <button id="editButton">Edit</button>
         <div class="quotes">
           <p><strong>Rasmus:</strong> <span id="quoteRasmus"></span></p>
           <p><strong>Henry:</strong> <span id="quoteHenry"></span></p>
           <p><strong>André:</strong> <span id="quoteAndre"></span></p>
         </div>
+              <!-- An edit form overlay (initially hidden) -->
+        <div id="editOverlay" style="display: none;">
+          <div id="editForm">
+            <h2>Edit Book</h2>
+            <label for="editTitle">Title:</label>
+            <input type="text" id="editTitle" />
+
+            <label for="editAuthor">Author:</label>
+            <input type="text" id="editAuthor" />
+
+            <label for="editDescription">Description:</label>
+            <textarea id="editDescription"></textarea>
+
+            <!-- ... add other fields as desired (genre, quotes, etc.) -->
+
+            <label for="editQuoteRasmus">Quote (Rasmus):</label>
+            <input type="text" id="editQuoteRasmus" />
+
+            <button id="submitEditBtn">Save</button>
+            <button id="cancelEditBtn">Cancel</button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
