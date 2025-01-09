@@ -435,5 +435,24 @@
     "quoteHenry": "",
     "quoteAndre": "",
     "cover": "https://raw.githubusercontent.com/RasmusKoRiis/book/main/assets/1735847625907-walls.jpg"
+  },
+  {
+    "id": 1736460955344,
+    "title": "The Coming Wave",
+    "author": "Mustafa Suleyman",
+    "realeaseDate": "2023",
+    "author_birthyear": "1984",
+    "genre": "NonFiction",
+    "realism_value": "10",
+    "lenght": "286",
+    "country": "United Kingdom",
+    "latitude": "55.3781",
+    "longitude": "-3.4360",
+    "description": "The Coming Wave by Mustafa Suleyman explores the transformative potential and risks of emerging technologies like artificial intelligence and synthetic biology, emphasizing their profound societal and ethical implications. The book calls for proactive governance and global cooperation to navigate these unprecedented challenges responsibly.",
+    "readDate": "09 January - ? / 2025",
+    "quoteRasmus": "",
+    "quoteHenry": "",
+    "quoteAndre": "",
+    "cover": "https://raw.githubusercontent.com/RasmusKoRiis/book/main/assets/1736460954495-The Coming Wave Book Cover.jpg"
   }
 ]
