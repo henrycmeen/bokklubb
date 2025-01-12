@@ -467,11 +467,16 @@
     "country": "South Korea",
     "latitude": "35.9078",
     "longitude": "127.7669",
-    "description": "Your Utopia is a 2024 short story collection by Bora Chung, featuring eight speculative tales that blend science fiction and social critique. The stories explore themes of loss, technology’s impact on humanity, and the quest for a better world, often infused with wry humor and poignant moments",
+    "description": "Your Utopia is a short story collection by Bora Chung, featuring eight speculative tales that blend science fiction and social critique. The stories explore themes of loss, technology’s impact on humanity, and the quest for a better world, often infused with wry humor and poignant moments",
     "readDate": "12 January - ? / 2025",
     "quoteRasmus": "",
     "quoteHenry": "",
     "quoteAndre": "",
-    "cover": "https://raw.githubusercontent.com/RasmusKoRiis/book/main/assets/1736693506665-Your Utopia Cover.jpg"
+    "cover": "https://raw.githubusercontent.com/RasmusKoRiis/book/main/assets/1736693506665-Your Utopia Cover.jpg",
+    "quotes": {
+      "rasmus": "",
+      "henry": "",
+      "andre": ""
+    }
   }
 ]
