@@ -101,5 +101,24 @@
     "quoteHenry": "",
     "quoteAndre": "",
     "cover": "https://raw.githubusercontent.com/RasmusKoRiis/book/main/assets/1737209387286-Hobitti-Tove-Jansson.jpg"
+  },
+  {
+    "id": 1737209716467,
+    "title": "Ringenes Herre: Ringens Brorskap",
+    "author": "J.R.R. Tolkien",
+    "realeaseDate": "1954",
+    "author_birthyear": "1892",
+    "genre": "1892",
+    "realism_value": "3",
+    "lenght": "423",
+    "country": "UK",
+    "latitude": "55.3781",
+    "longitude": "-3.4360",
+    "description": "Den første delen av Ringenes Herre-trilogien, som følger Frodo og hans følgesvenner på en episk reise for å ødelegge den ene ringen.",
+    "readDate": "",
+    "quoteRasmus": "",
+    "quoteHenry": "",
+    "quoteAndre": "",
+    "cover": "https://raw.githubusercontent.com/RasmusKoRiis/book/main/assets/1737209714945-9780008376123__e3ae8dc115bd8f35ad4ccf2dc87f1794.jpg"
   }
 ]
