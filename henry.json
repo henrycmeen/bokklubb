@@ -82,5 +82,24 @@
       "henry": "",
       "andre": ""
     }
+  },
+  {
+    "id": 1737209388737,
+    "title": "Hobbiten",
+    "author": "J.R.R. Tolkien",
+    "realeaseDate": "1937",
+    "author_birthyear": "1892",
+    "genre": "Fantasy",
+    "realism_value": "2",
+    "lenght": "310",
+    "country": "UK",
+    "latitude": "55.3781",
+    "longitude": "-3.4360",
+    "description": "En episk fantasyfortelling om hobbitens eventyr, inkludert Tove Janssons vakre illustrasjoner.",
+    "readDate": "",
+    "quoteRasmus": "",
+    "quoteHenry": "",
+    "quoteAndre": "",
+    "cover": "https://raw.githubusercontent.com/RasmusKoRiis/book/main/assets/1737209387286-Hobitti-Tove-Jansson.jpg"
   }
 ]
