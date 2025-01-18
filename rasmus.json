@@ -478,5 +478,24 @@
       "henry": "",
       "andre": ""
     }
+  },
+  {
+    "id": 1737197357014,
+    "title": "Weasels in the Attic",
+    "author": "Hiroko Oyamada",
+    "realeaseDate": "2013",
+    "author_birthyear": "1983",
+    "genre": "Fiction",
+    "realism_value": "6",
+    "lenght": "71",
+    "country": "Japan",
+    "latitude": "36.2048",
+    "longitude": "138.2529",
+    "description": "Weasels in the Attic is a darkly atmospheric novella that delves into the lives of three men, whose conversations and shared experiences reveal strained marriages, unspoken desires, and the eerie presence of weasels nesting in the attic as a metaphor for hidden tensions and unsettling truths in their domestic lives.",
+    "readDate": "18 January - ? / 2025",
+    "quoteRasmus": "",
+    "quoteHenry": "",
+    "quoteAndre": "",
+    "cover": "https://raw.githubusercontent.com/RasmusKoRiis/book/main/assets/1737197356040-Weasels in the Attic.jpg"
   }
 ]
