@@ -48,8 +48,8 @@ exports.handler = async function (event) {
 
   // GitHub details
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-  const owner = 'RasmusKoRiis';
-  const repo = 'book';
+  const owner = 'henmee';
+  const repo = 'book-1';
   const branch = 'main';
 
   async function getJson(fileName) {
