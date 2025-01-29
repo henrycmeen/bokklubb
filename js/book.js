@@ -1,163 +1,284 @@
-// Extract book ID and source from the URL
-const params = new URLSearchParams(window.location.search);
-const bookId = params.get('id');
-const source = params.get('source') || 'books.json'; // Default to books.json if source is not provided
+document.addEventListener('DOMContentLoaded', () => {
+  const bookDetailsDiv = document.getElementById('bookDetails');
+  // Get book ID from URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const bookId = urlParams.get('id');
 
-// JSON files to search
-const jsonFiles = ['books.json', 'rasmus.json', 'henry.json', 'andre.json'];
-
-// Fetch book data from multiple JSON files
-function fetchBookData(bookId, files) {
-  console.log(`Looking for book ID: ${bookId}`); // Debugging
-
-  // Helper function to recursively search through the files
-  function fetchNextFile(index) {
-    if (index >= files.length) {
-      // No more files to search
-      document.body.innerHTML = `<h1>Book with ID "${bookId}" not found</h1>`;
-      return;
-    }
-
-    console.log(`Fetching from ${files[index]}`); // Debugging
-
-    fetch(files[index])
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${files[index]}: ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log(`Data fetched from ${files[index]}:`, data); // Debugging
-
-        // Find the book with the matching ID
-        const book = data.find(item => String(item.id) === String(bookId));
-
-        if (book) {
-          console.log(`Book found:`, book); // Debugging
-
-          // Populate book details
-          document.getElementById('bookTitle').innerText = book.title || "No title available";
-          document.getElementById('bookAuthor').innerText = book.author || "Unknown author";
-          document.getElementById('bookDescription').innerText = book.description || "No description available";
-          document.getElementById('readDate').innerText = book.readDate || "No read date";
-
-          // Populate quotes
-          const quotes = book.quotes || {};
-          document.getElementById('quoteRasmus').innerText = quotes.rasmus || "No comment.";
-          document.getElementById('quoteHenry').innerText = quotes.henry || "No comment.";
-          document.getElementById('quoteAndre').innerText = quotes.andre || "No comment.";
-
-          // Store the book object in a global variable for later use
-          window.currentBook = book;
-          // Also store which file we found it in, if needed
-          window.currentSourceFile = files[index];
-
-        } else {
-          console.log(`Book not found in ${files[index]}`); // Debugging
-          fetchNextFile(index + 1); // Search the next file
-        }
-      })
-      .catch(err => {
-        console.error(`Error fetching data from ${files[index]}:`, err);
-        fetchNextFile(index + 1); // Move to the next file on error
-      });
+  if (!bookId) {
+    console.error('No book ID provided');
+    bookDetailsDiv.innerHTML = '<p class="error">Error: No book ID provided</p>';
+    return;
   }
 
-  // Start with the first file
-  fetchNextFile(0);
+  // Add click event listener to handle clicks outside the book container
+  document.addEventListener('click', (e) => {
+    const bookContainer = document.querySelector('.book-container');
+    const modal = document.getElementById('coverModal');
+    
+    // Check if click is outside book container and modal is not visible
+    if (bookContainer && 
+        !bookContainer.contains(e.target) && 
+        (!modal || modal.style.display !== 'block')) {
+      window.location.href = 'index.html';
+    }
+  });
+
+  // Fetch book data
+  fetch('/.netlify/functions/getBooks')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Network response was not ok (${response.status})`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      const book = data.books.find(b => String(b.id) === String(bookId));
+      if (!book) {
+        throw new Error('Book not found');
+      }
+      displayBookDetails(book);
+    })
+    .catch(err => {
+      console.error('Error fetching book:', err);
+      bookDetailsDiv.innerHTML = `<p class="error">Error loading book details: ${err.message}</p>`;
+      return;
+    });
+});
+
+function displayBookDetails(book) {
+  const bookDetailsDiv = document.getElementById('bookDetails');
+  
+  // Create HTML structure for book details
+  const html = `
+    <div class="book-container">
+      <div class="book-cover">
+        <img src="${book.cover || 'data:image/svg+xml;charset=UTF-8,%3csvg xmlns="http://www.w3.org/2000/svg" width="100" height="150" viewBox="0 0 100 150"%3e%3crect width="100" height="150" fill="%23e0e0e0"/%3e%3c/svg%3e'}" alt="${book.title} cover" class="cover-image">
+        <button class="change-cover-btn">Change Cover</button>
+      </div>
+      <div class="book-info">
+        <h1>${book.title}</h1>
+        <h2>${book.author}</h2>
+        <p class="release-date">Published: ${book.releaseDate || 'Unknown'}</p>
+        <p class="genre">Genre: ${book.genre || 'Unknown'}</p>
+        <p class="length">${book.length ? book.length + ' pages' : ''}</p>
+        <p class="country">Country: ${book.country || 'Unknown'}</p>
+        <div class="description">
+          <h3>Description</h3>
+          <p>${book.description || 'No description available.'}</p>
+        </div>
+        ${book.quotes ? `
+        <div class="quotes">
+          <h3>Quotes</h3>
+          ${book.quotes.rasmus ? `<div class="quote"><strong>Rasmus:</strong> "${book.quotes.rasmus}"</div>` : ''}
+          ${book.quotes.henry ? `<div class="quote"><strong>Henry:</strong> "${book.quotes.henry}"</div>` : ''}
+          ${book.quotes.andre ? `<div class="quote"><strong>Andre:</strong> "${book.quotes.andre}"</div>` : ''}
+        </div>
+        ` : ''}
+      </div>
+    </div>
+
+    <div id="coverModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="cover-options">
+          <div id="coverGrid"></div>
+          <div class="upload-cover-btn">
+            <label for="coverUpload" class="upload-label">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"></path>
+              </svg>
+            </label>
+            <input type="file" id="coverUpload" accept="image/*" style="display: none;">
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  bookDetailsDiv.innerHTML = html;
+
+  // Add event listeners for cover change functionality
+  setupCoverChangeModal(book);
 }
 
-// Initiate fetching with the book ID
-fetchBookData(bookId, jsonFiles);
+function setupCoverChangeModal(book) {
+  const modal = document.getElementById('coverModal');
+  const closeBtn = document.querySelector('.close');
+  const changeBtn = document.querySelector('.change-cover-btn');
+  const coverGrid = document.getElementById('coverGrid');
+  const fileInput = document.getElementById('coverUpload');
 
-document.getElementById('editButton').addEventListener('click', () => {
-  // Show the edit overlay
-  document.getElementById('editOverlay').style.display = 'block';
+  // Event listeners
+  changeBtn.addEventListener('click', () => modal.style.display = 'block');
+  closeBtn.addEventListener('click', () => modal.style.display = 'none');
+  window.addEventListener('click', (e) => {
+    if (e.target === modal) modal.style.display = 'none';
+  });
 
-  // Pre-fill the form fields with current data
-  document.getElementById('editTitle').value = window.currentBook.title || '';
-  document.getElementById('editAuthor').value = window.currentBook.author || '';
-  document.getElementById('editDescription').value = window.currentBook.description || '';
-  document.getElementById('readDate').value = window.currentBook.readDate || '';
-  document.getElementById('editQuoteRasmus').value = window.currentBook.quoteRasmus || '';
-  document.getElementById('editQuoteAndre').value = window.currentBook.quoteAndre || '';
-  document.getElementById('editQuoteHenry').value = window.currentBook.quoteHenry || '';
-
-  // ... etc for any fields you'd like to allow editing
-});
-
-document.getElementById('cancelEditBtn').addEventListener('click', () => {
-  document.getElementById('editOverlay').style.display = 'none';
-});
-
-document.getElementById('submitEditBtn').addEventListener('click', async () => {
-  // Prompt the user for the admin password
-  const userPassword = prompt('Please enter the admin password:');
-  if (!userPassword) {
-    alert('You must enter a password to continue.');
-    return; // Stop if user pressed "Cancel" or didn’t type anything
-  }
-
-  // Gather updated data from the form
-  const updatedTitle = document.getElementById('editTitle').value.trim();
-  const updatedAuthor = document.getElementById('editAuthor').value.trim();
-  const updatedDescription = document.getElementById('editDescription').value.trim();
-  const updatedreadDate = document.getElementById('readDate').value.trim();
-  const updatedQuoteRasmus = document.getElementById('editQuoteRasmus').value.trim();
-  const updatedQuoteAndre = document.getElementById('editQuoteAndre').value.trim();
-  const updatedQuoteHenry = document.getElementById('editQuoteHenry').value.trim();
-
-  // Build payload
-  const payload = {
-    // We definitely need to identify which entry to update
-    id: window.currentBook.id, 
-    source: window.currentSourceFile, 
-    updatedFields: {
-      title: updatedTitle,
-      author: updatedAuthor,
-      description: updatedDescription,
-      readDate: updatedreadDate,
-      quoteRasmus: updatedQuoteRasmus,
-      quoteAndre: updatedQuoteAndre,
-      quoteHenry: updatedQuoteHenry,
-      // ... any other fields ...
-    },
-    // Use whatever the user typed in the prompt
-    secretPassword: userPassword
-  };
-
-  try {
-    const res = await fetch('/.netlify/functions/updateBook', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+  // Fetch and populate cover grid from coverAssets.json
+  fetch('/js/coverAssets.json')
+    .then(response => response.json())
+    .then(data => {
+      coverGrid.innerHTML = data.covers
+        .map(filename => {
+          const randomRotation = Math.random() * 12 - 6; // Random rotation between -6 and 6 degrees
+          const randomScale = 0.9 + Math.random() * 0.2; // Random scale between 0.9 and 1.1
+          return `
+            <div class="cover-option" style="--random-rotation: ${randomRotation}deg; --random-scale: ${randomScale}">
+              <img src="assets/${filename}" alt="${filename}" data-filename="${filename}">
+            </div>
+          `;
+        })
+        .join('');
+    })
+    .catch(error => {
+      console.error('Error loading cover assets:', error);
+      coverGrid.innerHTML = '<p class="error">Error loading cover options</p>';
     });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(`Server responded with status ${res.status}: ${errorText}`);
-    }
+  // Handle cover selection
+  coverGrid.addEventListener('click', async (e) => {
+    const img = e.target.closest('img');
+    if (!img) return;
 
-    const result = await res.json();
+    const filename = img.dataset.filename;
+    const response = await fetch(img.src);
+    const blob = await response.blob();
+    const reader = new FileReader();
+
+    reader.onloadend = async () => {
+      const base64data = reader.result.split(',')[1];
+      updateBookCover(book.id, base64data, filename);
+    };
+
+    reader.readAsDataURL(blob);
+  });
+
+  // Handle file upload
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64data = reader.result.split(',')[1];
+      updateBookCover(book.id, base64data, file.name);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function updateBookCover(bookId, coverBase64, filename) {
+  const modal = document.getElementById('coverModal');
+  const password = prompt('Please enter admin password:');
+  if (!password) return;
+
+  try {
+    const response = await fetch('/.netlify/functions/addBook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        secretPassword: password,
+        title: filename,
+        coverFileBase64: coverBase64,
+        coverFileName: filename
+      })
+    });
+
+    const result = await response.json();
     if (result.success) {
-      alert('Book updated successfully!');
-      // Hide overlay, maybe refresh or re-fetch data
-      document.getElementById('editOverlay').style.display = 'none';
-
-      // Optional: Update the DOM if you want immediate changes
-      document.getElementById('bookTitle').innerText = updatedTitle;
-      document.getElementById('bookAuthor').innerText = updatedAuthor;
-      document.getElementById('bookDescription').innerText = updatedDescription;
-      document.getElementById('readDate').innerText = updatedreadDate;
-      document.getElementById('quoteRasmus').innerText = updatedQuoteRasmus;
-      document.getElementById('quoteAndre').innerText = updatedQuoteAndre;
-      document.getElementById('quoteHenry').innerText = updatedQuoteHenry;
-      
+      modal.style.display = 'none';
+      location.reload();
     } else {
-      alert('Failed to update book: ' + result.message);
+      alert('Failed to update cover: ' + result.message);
     }
   } catch (error) {
-    alert('Error updating book: ' + error.message);
+    console.error('Error updating cover:', error);
+    alert('Failed to update cover. Please try again.');
   }
-});
+}
+
+async function loadExistingCovers(coverGrid) {
+  try {
+    const response = await fetch('/.netlify/functions/getBooks');
+    if (!response.ok) throw new Error('Failed to fetch books');
+    const data = await response.json();
+
+    // Get unique covers
+    const covers = [...new Set(data.books.map(book => book.cover))];
+
+    // Create grid of covers
+    coverGrid.innerHTML = covers
+      .map(cover => `
+        <div class="cover-option">
+          <img src="${cover}" alt="Book cover option" onclick="selectCover('${cover}')">
+        </div>
+      `)
+      .join('');
+  } catch (error) {
+    console.error('Error loading covers:', error);
+    coverGrid.innerHTML = '<p class="error">Error loading covers</p>';
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = error => reject(error);
+  });
+}
+
+async function updateBookCover(bookId, coverBase64, fileName) {
+  try {
+    const response = await fetch('/.netlify/functions/updateBook', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: bookId,
+        coverFileBase64: coverBase64,
+        coverFileName: fileName,
+        secretPassword: prompt('Enter admin password:')
+      })
+    });
+
+    if (!response.ok) throw new Error('Failed to update cover');
+
+    // Refresh the page to show new cover
+    window.location.reload();
+  } catch (error) {
+    console.error('Error updating cover:', error);
+    alert('Error updating cover. Please try again.');
+  }
+}
+
+// Global function for selecting existing cover
+window.selectCover = async function(coverUrl) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const bookId = urlParams.get('id');
+  
+  try {
+    const response = await fetch('/.netlify/functions/updateBook', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: bookId,
+        updatedFields: { cover: coverUrl },
+        secretPassword: prompt('Enter admin password:')
+      })
+    });
+
+    if (!response.ok) throw new Error('Failed to update cover');
+
+    // Refresh the page to show new cover
+    window.location.reload();
+  } catch (error) {
+    console.error('Error updating cover:', error);
+    alert('Error updating cover. Please try again.');
+  }
+};

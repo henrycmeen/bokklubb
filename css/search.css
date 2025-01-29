@@ -1,0 +1,128 @@
+/* ==============================
+   OVERLAY
+============================== */
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: none; /* Skjult som standard */
+  }
+  
+  /* ==============================
+     SØKE-BOKS/CONTAINER
+  ============================== */
+  .search-container {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    max-width: 90%;
+    z-index: 1001;
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    display: none; 
+  }
+  
+  /* ==============================
+     SØK-FELT (INPUT)
+  ============================== */
+  #bookSearch {
+    width: 90%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    margin: 0;
+    transition: all 0.2s ease;
+    outline: none;
+    box-shadow: none;
+  }
+  
+  /* Når input har fokus, vis en tydeligere skygge */
+  #bookSearch:focus {
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* ==============================
+     RESULTAT-LISTE
+  ============================== */
+  .search-results {
+    margin-top: 8px;
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none; /* Skjult som standard - vises når det finnes søkeresultater */
+    padding: 4px 0;
+  }
+  
+  /* ==============================
+     ENKELT RESULTAT
+  ============================== */
+  .search-result {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .search-result:last-child {
+    border-bottom: none; /* Fjern streken etter siste element */
+  }
+  
+  .search-result:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Bilde (bokcover) i hvert resultat */
+  .search-result-cover {
+    width: 50px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Tekst-informasjon i hvert resultat */
+  .search-result-info {
+    flex: 1;
+  }
+  
+  .book-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  
+  .book-author {
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  /* ==============================
+     MEDIA QUERIES
+  ============================== */
+  @media (max-width: 768px) {
+    .search-container {
+      width: 95%;
+      top: 40%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .search-container {
+      width: 100%;
+      top: 30%;
+    }
+  }

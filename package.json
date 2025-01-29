@@ -6,5 +6,8 @@
     },
     "dependencies": {
         "node-fetch": "^2.7.0"
+    },
+    "devDependencies": {
+        "netlify-cli": "^18.0.3"
     }
 }

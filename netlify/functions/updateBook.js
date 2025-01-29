@@ -1,6 +1,7 @@
 // netlify/functions/updateBook.js
 
 const fetch = require('node-fetch');
+const { getConfig } = require('./config');
 
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') {
@@ -46,11 +47,10 @@ exports.handler = async function (event) {
     };
   }
 
-  // GitHub details
+  // Get environment configuration
+  const config = getConfig();
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-  const owner = 'RasmusKoRiis';
-  const repo = 'book';
-  const branch = 'main';
+  const { owner, repo, branch } = config.githubConfig;
 
   async function getJson(fileName) {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${fileName}`, {

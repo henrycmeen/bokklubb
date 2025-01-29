@@ -4,83 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Book Details</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/book.css">
+  <link rel="stylesheet" href="css/search.css">
 </head>
-<body class="detail-page">
-    <div class="fixed-title" onclick="animatePage()">MUSERNES BOKKLUBB - 2024</div>
-    <div class="overlay" id="overlay"></div>
-    <div class="book-detail">
-      <div class="content">
-        <a href="index.html" class="index-button" style="position: absolute; top: 10px; left: 10px; font-size: 24px; color: white; text-decoration: none;">-</a>
-        <h1 id="bookTitle"></h1>
-        <h2 id="bookAuthor"></h2>
-        <p id="bookDescription"></p>
-        <p id="readDate"></p>
-        <div class="quotes">
-          <p><strong>Rasmus:</strong> <span id="quoteRasmus"></span></p>
-          <p><strong>Henry:</strong> <span id="quoteHenry"></span></p>
-          <p><strong>André:</strong> <span id="quoteAndre"></span></p>
-        </div>
-        <button id="editButton" onclick="event.stopPropagation()">Edit</button>
-              <!-- An edit form overlay (initially hidden) -->
-  <!-- An edit form overlay (initially hidden) -->
-  <div id="editOverlay" style="display: none;">
-    <div id="editForm">
-      <h2>Edit Book</h2>
-      
-      <div class="form-row">
-        <label for="editTitle">Title:</label>
-        <input type="text" id="editTitle" />
-      </div>
-
-      <div class="form-row">
-        <label for="editAuthor">Author:</label>
-        <input type="text" id="editAuthor" />
-      </div>
-
-      <div class="form-row">
-        <label for="readDate">Read Date </label>
-        <input type="text" id="readDate" />
-      </div>
-
-      <div class="form-row">
-        <label for="editDescription">Description: </label>
-        <textarea id="editDescription" rows="7" cols="70"></textarea>
-      </div>
-
-
-      <div class="form-row">
-        <label for="editQuoteRasmus">Quote (Rasmus):</label>
-        <textarea id="editQuoteRasmus" rows="7" cols="70"></textarea>
-      </div>
-
-      <div class="form-row">
-        <label for="editQuoteAndre">Quote (André):</label>
-        <textarea id="editQuoteAndre" rows="7" cols="70"></textarea>
-      </div>
-
-      <div class="form-row">
-        <label for="editQuoteHenry">Quote (Henry):</label>
-        <textarea id="editQuoteHenry" rows="7" cols="70"></textarea>      </div>
-
-      <div class="button-row">
-        <button id="submitEditBtn">Save</button>
-        <button id="cancelEditBtn">Cancel</button>
-      </div>
-    </div>
-  </div>
-
+<body class="book-page">
+  <header>
+  </header>
+  <main>
+    <div id="bookDetails"></div>
+  </main>
   <script src="js/book.js"></script>
-  <script>
-    // Function to navigate back to the grid page
-    function goToGrid() {
-      // Extract the source JSON from the URL parameters
-      const params = new URLSearchParams(window.location.search);
-      const source = params.get('source') || 'books.json'; // Default to books.json if no source is provided
-  
-      // Redirect to the grid page with the source parameter
-      window.location.href = `index.html?source=${source}`;
-    }
-  </script>
 </body>
 </html>
