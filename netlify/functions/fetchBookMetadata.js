@@ -11,20 +11,23 @@ async function fetchBookMetadata(title) {
       throw new Error('No books found');
     }
 
-    const book = data.items[0].volumeInfo;
-    
-    return {
-      title: book.title,
-      author: book.authors ? book.authors[0] : 'Unknown',
-      releaseDate: book.publishedDate ? parseInt(book.publishedDate.split('-')[0]) : null,
-      genre: book.categories ? book.categories[0] : 'Fiction',
-      length: book.pageCount || null,
-      description: book.description || '',
-      country: book.language === 'en' ? 'Unknown' : book.language.toUpperCase(),
-      latitude: null,  // These will need to be filled manually or through another service
-      longitude: null,
-      realism_value: 5  // Default value
-    };
+    // Return multiple books instead of just the first one
+    return data.items.slice(0, 5).map(item => {
+      const book = item.volumeInfo;
+      return {
+        title: book.title,
+        author: book.authors ? book.authors[0] : 'Unknown',
+        releaseDate: book.publishedDate ? parseInt(book.publishedDate.split('-')[0]) : null,
+        genre: book.categories ? book.categories[0] : 'Fiction',
+        length: book.pageCount || null,
+        description: book.description || '',
+        country: book.language === 'en' ? 'Unknown' : book.language.toUpperCase(),
+        cover: book.imageLinks ? book.imageLinks.thumbnail : null,
+        latitude: null,
+        longitude: null,
+        realism_value: 5
+      };
+    });
   } catch (error) {
     console.error('Error fetching book metadata:', error);
     throw error;

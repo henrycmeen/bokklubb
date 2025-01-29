@@ -4,91 +4,48 @@
       "id": "B001",
       "title": "After Dark",
       "author": "Haruki Murakami",
+      "isbn": "9780099506249",
       "cover": "assets/afterdark.jpg",
       "releaseDate": 2004,
-      "author_birthyear": 1949,
-      "genre": "Fiction",
-      "realism_value": 4,
-      "length": 201,
-      "country": "Japan",
-      "latitude": 36.2048,
-      "longitude": 138.2529,
       "description": "A surreal, atmospheric novel that explores the interconnected lives of strangers during a single enigmatic night in Tokyo."
     },
     {
       "id": "B002",
       "title": "The Day The Sun Died",
       "author": "Yan Lianke",
+      "isbn": "9780802128539",
       "cover": "assets/sundied.jpg",
       "releaseDate": 2017,
-      "author_birthyear": 1958,
-      "genre": "Fiction",
-      "realism_value": 8,
-      "length": 336,
-      "country": "China",
-      "latitude": 35.8617,
-      "longitude": 104.1954,
       "description": "The Day The Sun Died by Yan Lianke is a darkly satirical novel about a small village descending into chaos as its residents, caught in a nightmarish state of 'dreamwalking,' blur the lines between reality and dream, exposing the fragility of societal order."
     },
     {
       "id": "B003",
       "title": "The Vegetarian",
       "author": "Han Kang",
+      "isbn": "9781846276033",
       "cover": "assets/vegetarian.jpg",
       "releaseDate": 2007,
-      "author_birthyear": 1970,
-      "genre": "Fiction",
-      "realism_value": 7,
-      "length": 188,
-      "country": "South Korea",
-      "latitude": 35.9078,
-      "longitude": 127.7669,
       "description": "The Vegetarian by Han Kang is a haunting novel about a woman's decision to renounce meat and its cascading effects on her family and psyche, exploring themes of desire, control."
-    }
-  ],
-  "users": [
-    {
-      "id": "rasmus",
-      "name": "Rasmus",
-      "reading_list": [
-        {
-          "book_id": "B001",
-          "readDate": "16 November - 30 November / 2024",
-          "quote": "Dualisme og friheten som en sovende by kan tilby. After Dark utforsker kontrastene i menneskelivet gjennom nattens transformasjon av Tokyo. Natten åpner opp for et annet liv, der mennesker får muligheten til å være noe annet, kanskje noe mer ekte, men kun for en kort stund."
-        },
-        {
-          "book_id": "B002",
-          "readDate": "30 November - 15 December / 2024",
-          "quote": ""
-        }
-      ]
     },
     {
-      "id": "henry",
-      "name": "Henry",
-      "reading_list": [
-        {
-          "book_id": "B001",
-          "readDate": "16 November - 30 November / 2024",
-          "quote": "Byen ser alt, men forstår lite - et levende system skapt av oss. Mennesker har gitt liv til abstrakte systemer som økonomi, politikk og teknologi, men vi har også mistet kontroll over dem."
-        },
-        {
-          "book_id": "B002",
-          "readDate": "30 November - ? / ?",
-          "quote": ""
-        }
-      ]
+      "id": "B004",
+      "title": "The Hobbit",
+      "author": "J.R.R. Tolkien",
+      "isbn": "9780261102217",
+      "cover": "assets/1737209387286-Hobitti-Tove-Jansson.jpg",
+      "releaseDate": 1937,
+      "description": "The Hobbit is a tale of high adventure, undertaken by a company of dwarves in search of dragon-guarded gold. A reluctant partner in this perilous quest is Bilbo Baggins, a comfort-loving unambitious hobbit."
     },
     {
-      "id": "andre",
-      "name": "Andre",
-      "reading_list": [
-        {
-          "book_id": "B002",
-          "readDate": "30 November - ? / ?",
-          "quote": ""
-        }
-      ]
+      "id": "B005",
+      "title": "Sommerboken",
+      "author": "Tove Jansson",
+      "isbn": "9788281770249",
+      "cover": "assets/sommerboken.jpg",
+      "releaseDate": 1974,
+      "description": "Boken handler om seks år gamle Sophia og hennes farmor, som tilbringer sommeren på en liten øy i den finske skjærgården. Sammen utforsker de øya, svømmer, bygger båter av bark og blader, studerer insekter og blomster, tegner og skriver. Gjennom disse aktivitetene følger de sine egne innfall og samtaler om livets og naturens små og store mysterier."
     }
   ]
 }
+
+
