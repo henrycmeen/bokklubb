@@ -6,7 +6,7 @@ const config = {
     localFilePath: 'bookclub.json',
     githubConfig: {
       owner: 'henmee',
-      repo: 'book-1',
+      repo: 'bokklubb',
       branch: 'main'
     }
   },
@@ -14,12 +14,10 @@ const config = {
     useLocalFile: false,
     githubConfig: {
       owner: 'henmee',
-      repo: 'book-1',
+      repo: 'bokklubb',
       branch: 'main'
     }
   }
 };
 
-module.exports = {
-  getConfig: () => config[process.env.NODE_ENV || 'development']
-};
+export const getConfig = () => config[process.env.NODE_ENV || 'development'];
